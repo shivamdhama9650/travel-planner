@@ -28,6 +28,10 @@ const SUPABASE_JWKS = SUPABASE_URL
 
 const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || "";
 const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || "";
+const ALLOW_RAZORPAY_TEST_IN_PROD = String(process.env.ALLOW_RAZORPAY_TEST_IN_PROD || "")
+  .trim()
+  .toLowerCase() === "true";
+const isRazorpayTestKey = (key = "") => String(key || "").trim().toLowerCase().startsWith("rzp_test_");
 const razorpay =
   RAZORPAY_KEY_ID && RAZORPAY_KEY_SECRET
     ? new Razorpay({ key_id: RAZORPAY_KEY_ID, key_secret: RAZORPAY_KEY_SECRET })
@@ -438,6 +442,14 @@ app.post("/api/create-order", authenticate, async (req, res) => {
     });
   }
 
+  if (process.env.NODE_ENV === "production" && isRazorpayTestKey(RAZORPAY_KEY_ID) && !ALLOW_RAZORPAY_TEST_IN_PROD) {
+    return res.status(500).json({
+      success: false,
+      message:
+        "Razorpay is configured with a TEST key in production. Set Live keys (rzp_live_...) or set ALLOW_RAZORPAY_TEST_IN_PROD=true to override.",
+    });
+  }
+
   try {
     const order = await razorpay.orders.create({
       amount: amountPaise,
@@ -557,6 +569,46 @@ app.post("/api/verify-payment", authenticate, async (req, res) => {
       booking_id: String(booking._id),
     },
   });
+});
+
+// GET /api/admin/bookings — list all confirmed bookings (admin only)
+app.get("/api/admin/bookings", authenticate, requireRole("admin"), async (req, res) => {
+  if (!usingMongo || !Booking || !User) {
+    return res.status(503).json({
+      success: false,
+      message: "Bookings require MongoDB. Please configure MONGO_URI.",
+    });
+  }
+
+  const bookings = await Booking.find({})
+    .sort({ createdAt: -1 })
+    .lean();
+
+  const userIds = Array.from(new Set(bookings.map((b) => String(b.userId)).filter(Boolean)));
+  const users = await User.find({ _id: { $in: userIds } })
+    .select({ name: 1, email: 1, role: 1 })
+    .lean();
+  const usersById = new Map(users.map((u) => [String(u._id), u]));
+
+  const data = bookings.map((b) => {
+    const u = usersById.get(String(b.userId));
+    return {
+      id: String(b._id),
+      userId: String(b.userId),
+      userName: u?.name || "Unknown",
+      userEmail: u?.email || "",
+      destinationId: b.destinationId,
+      destinationName: b.destinationName,
+      amount: b.amount,
+      currency: b.currency,
+      razorpayOrderId: b.razorpayOrderId,
+      razorpayPaymentId: b.razorpayPaymentId,
+      status: b.status,
+      createdAt: b.createdAt,
+    };
+  });
+
+  return res.json({ success: true, count: data.length, data });
 });
 
 // GET /api/bookings — list current user's confirmed bookings

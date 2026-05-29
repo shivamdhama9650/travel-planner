@@ -38,6 +38,12 @@ export default function RazorpayBookButton({
       return;
     }
 
+    if (process.env.NODE_ENV === "production" && String(keyId).toLowerCase().startsWith("rzp_test_")) {
+      setMessage("Payments are not configured for production yet. Please set a Razorpay Live key (rzp_live_...).");
+      setMessageType("error");
+      return;
+    }
+
     if (typeof window === "undefined" || !window.Razorpay) {
       setMessage("Payment gateway is loading. Please try again in a moment.");
       setMessageType("error");
