@@ -32,7 +32,8 @@ export default function RazorpayBookButton({
     }
 
     const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
-    if (!keyId) {
+    console.log('🧭 Razorpay env -> keyId:', keyId);
+    console.log('🧭 Razorpay env -> allowTestFlag:', process.env.NEXT_PUBLIC_ALLOW_RAZORPAY_TEST_IN_PROD);
       setMessage("Razorpay is not configured. Add NEXT_PUBLIC_RAZORPAY_KEY_ID to .env.local");
       setMessageType("error");
       return;
@@ -44,6 +45,7 @@ export default function RazorpayBookButton({
       setMessage("Payments are not configured for production yet. Please set a Razorpay Live key (rzp_live_...).");
       setMessageType("error");
       return;
+    }
     }
 
     if (typeof window === "undefined" || !window.Razorpay) {
