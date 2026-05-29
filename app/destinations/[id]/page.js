@@ -7,6 +7,8 @@ import ExpenseCalculator from "../../components/ExpenseCalculator";
 import localDestinations from "../../../backend/data/destinations.json";
 import { normalizeImageUrl } from "../../lib/images";
 
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+
 // SEO Metadata
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -28,7 +30,7 @@ export async function generateMetadata({ params }) {
 
 async function getDestination(id) {
   try {
-    const res = await fetch(`http://localhost:3001/api/destinations/${id}`, {
+    const res = await fetch(`${API}/api/destinations/${id}`, {
       cache: "no-store",
     });
     if (!res.ok) throw new Error("API error");

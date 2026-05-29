@@ -556,17 +556,26 @@ ul, ol {
 .navbar-toggle {
   display: none;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 5px;
-  background: none;
-  padding: var(--space-sm);
+  background: hsla(220, 30%, 12%, 0.75);
+  border: 1px solid hsla(0, 0%, 100%, 0.25);
+  border-radius: var(--radius-md);
+  padding: 0.55rem 0.5rem;
+  min-width: 44px;
+  min-height: 44px;
+  z-index: 1002;
+  cursor: pointer;
 }
 
 .navbar-toggle span {
-  width: 24px;
+  width: 22px;
   height: 2px;
-  background: var(--text-primary);
+  background: hsl(0, 0%, 98%);
   transition: all var(--transition-base);
   border-radius: 2px;
+  box-shadow: 0 1px 4px hsla(0, 0%, 0%, 0.4);
 }
 
 .navbar-toggle.open span:nth-child(1) {
@@ -581,20 +590,40 @@ ul, ol {
   transform: rotate(-45deg) translateY(-5px) translateX(5px);
 }
 
+/* Mobile menu backdrop */
+.navbar-mobile-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  top: var(--nav-height);
+  background: hsla(220, 35%, 5%, 0.65);
+  z-index: 1001;
+}
+
+.navbar-mobile-backdrop.open {
+  display: block;
+}
+
 /* Mobile menu */
 .navbar-mobile {
   display: none;
   position: fixed;
   top: var(--nav-height);
   left: 0;
+  right: 0;
   width: 100%;
-  background: var(--bg-glass-strong);
+  max-height: calc(100vh - var(--nav-height));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: hsla(220, 30%, 10%, 0.98);
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
   border-bottom: 1px solid var(--border);
-  padding: var(--space-xl);
+  padding: var(--space-lg) var(--space-xl) var(--space-2xl);
   flex-direction: column;
-  gap: var(--space-lg);
+  gap: var(--space-md);
+  z-index: 1002;
+  box-shadow: var(--shadow-lg);
   animation: fadeInUp 0.3s var(--ease-smooth);
 }
 
@@ -604,18 +633,33 @@ ul, ol {
 
 .navbar-mobile .navbar-link {
   font-size: var(--text-lg);
-  padding: var(--space-sm) 0;
-  background: transparent;
+  padding: var(--space-md) var(--space-sm);
+  background: hsla(220, 25%, 18%, 0.6);
+  border-radius: var(--radius-md);
   text-shadow: none;
+  width: 100%;
+  justify-content: flex-start;
 }
 
-@media (max-width: 768px) {
+.navbar-mobile .navbar-auth-link,
+.navbar-mobile .btn {
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+  margin-top: var(--space-sm);
+}
+
+@media (max-width: 900px) {
   .navbar-links {
-    display: none;
+    display: none !important;
   }
 
   .navbar-toggle {
     display: flex;
+  }
+
+  .navbar-inner {
+    padding: 0 var(--space-md);
   }
 }
 

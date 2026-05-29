@@ -172,6 +172,30 @@ const seedMongoFromJson = async () => {
     console.log(`🗑️  Removed ${deleteResult.deletedCount} stale destination(s) from MongoDB`);
   }
 
+  // ── Step 2b: Remove duplicate names (e.g. sample data + JSON both had Shimla) ─
+  const allDocs = await Destination.find({}).lean();
+  const byName = new Map();
+  for (const doc of allDocs) {
+    const nameKey = slugifyDestinationName(doc.name || doc.id);
+    if (!nameKey) continue;
+    if (!byName.has(nameKey)) byName.set(nameKey, []);
+    byName.get(nameKey).push(doc);
+  }
+  let removedDupes = 0;
+  for (const docs of byName.values()) {
+    if (docs.length <= 1) continue;
+    const keep = docs.find((d) => jsonIds.has(d.id)) || docs[0];
+    for (const doc of docs) {
+      if (String(doc._id) !== String(keep._id)) {
+        await Destination.deleteOne({ _id: doc._id });
+        removedDupes += 1;
+      }
+    }
+  }
+  if (removedDupes > 0) {
+    console.log(`🗑️  Removed ${removedDupes} duplicate destination(s) by name`);
+  }
+
   // ── Step 3: Ensure package prices exist for all destinations ─────────────
   const destinations = await Destination.find({}).lean();
   let upsertedCount = 0;
@@ -296,9 +320,31 @@ const sanitizeDestinationImages = (dest) => {
   return next;
 };
 
+const dedupeDestinations = (list) => {
+  const jsonIdSet = new Set(jsonDestinations.map((d) => d.id).filter(Boolean));
+  const byKey = new Map();
+
+  for (const dest of list) {
+    const key = (dest.id || slugifyDestinationName(dest.name)).toLowerCase();
+    if (!key) continue;
+
+    const existing = byKey.get(key);
+    if (!existing) {
+      byKey.set(key, dest);
+      continue;
+    }
+
+    const preferCurrent =
+      jsonIdSet.has(dest.id) && !jsonIdSet.has(existing.id);
+    if (preferCurrent) byKey.set(key, dest);
+  }
+
+  return [...byKey.values()];
+};
+
 const getAllDestinations = async () => {
   const list = usingMongo ? await Destination.find({}).lean() : jsonDestinations;
-  return list.map(sanitizeDestinationImages);
+  return dedupeDestinations(list).map(sanitizeDestinationImages);
 };
 
 const getDestinationById = async (id) => {

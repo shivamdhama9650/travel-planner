@@ -16,6 +16,13 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
+
+  useEffect(() => {
     const syncAuth = async () => {
       const { user: currentUser } = getStoredAuth();
       if (currentUser) {
@@ -112,9 +119,11 @@ export default function Navbar() {
           </div>
 
           <button
+            type="button"
             className={`navbar-toggle ${mobileOpen ? "open" : ""}`}
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
+            aria-expanded={mobileOpen}
             id="navbar-toggle"
           >
             <span></span>
@@ -124,7 +133,13 @@ export default function Navbar() {
         </div>
       </nav>
 
-      <div className={`navbar-mobile ${mobileOpen ? "open" : ""}`}>
+      <div
+        className={`navbar-mobile-backdrop ${mobileOpen ? "open" : ""}`}
+        onClick={() => setMobileOpen(false)}
+        aria-hidden={!mobileOpen}
+      />
+
+      <div className={`navbar-mobile ${mobileOpen ? "open" : ""}`} id="navbar-mobile-menu">
         {links.map((link) => (
           <Link
             key={link.href}

@@ -79,6 +79,7 @@ const FALLBACK = [
   }
 ];
 
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 const REGIONS = ["All", "North India", "West India", "Northeast India"];
 
 export default function DestinationsPage() {
@@ -92,7 +93,7 @@ export default function DestinationsPage() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch("http://localhost:3001/api/destinations");
+        const res = await fetch(`${API}/api/destinations`);
         if (!res.ok) throw new Error();
         const json = await res.json();
         setDestinations(json.data || FALLBACK);

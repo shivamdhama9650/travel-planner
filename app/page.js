@@ -97,8 +97,18 @@ function getFallbackDestinations() {
   ];
 }
 
+function uniqueDestinations(list) {
+  const seen = new Set();
+  return list.filter((d) => {
+    const key = (d.id || d.name || "").toLowerCase().trim();
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 export default async function Home() {
-  const destinations = await getDestinations();
+  const destinations = uniqueDestinations(await getDestinations());
   const featured = destinations.slice(0, 4);
 
   return (
