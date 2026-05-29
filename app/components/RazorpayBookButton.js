@@ -38,11 +38,9 @@ export default function RazorpayBookButton({
       return;
     }
 
-    if (
-      process.env.NODE_ENV === "production" &&
-      String(keyId).toLowerCase().startsWith("rzp_test_") &&
-      process.env.NEXT_PUBLIC_ALLOW_RAZORPAY_TEST_IN_PROD !== "true"
-    ) {
+    // Allow test keys in production if the explicit override flag is set to true (case‑insensitive)
+    const allowTestKey = String(process.env.NEXT_PUBLIC_ALLOW_RAZORPAY_TEST_IN_PROD || "").trim().toLowerCase() === "true";
+    if (process.env.NODE_ENV === "production" && String(keyId).toLowerCase().startsWith("rzp_test_") && !allowTestKey) {
       setMessage("Payments are not configured for production yet. Please set a Razorpay Live key (rzp_live_...).");
       setMessageType("error");
       return;
