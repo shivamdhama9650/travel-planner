@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import Script from "next/script";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { getStoredAuth } from "../lib/auth";
@@ -33,26 +34,11 @@ const COUPONS = {
   FIRSTTRIP: { discount: 10, type: "percent", label: "10% Off First Adventure" },
 };
 
-function loadRazorpayScript() {
-  return new Promise((resolve) => {
-    if (window.Razorpay) {
-      resolve(true);
-      return;
-    }
-    const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
-    script.async = true;
-    script.onload = () => resolve(true);
-    script.onerror = () => resolve(false);
-    document.body.appendChild(script);
-  });
-}
-
 function CheckoutForm() {
   const searchParams = useSearchParams();
   const destId = searchParams.get("destination") || "manali";
 
-  const [auth, setAuth] = useState({ token: "", user: null });
+  const [auth] = useState(() => getStoredAuth());
   const [destination, setDestination] = useState(null);
   const [packagePrice, setPackagePrice] = useState(15000);
   const [loading, setLoading] = useState(true);
@@ -61,8 +47,8 @@ function CheckoutForm() {
   // Form Fields
   const [numTravelers, setNumTravelers] = useState(1);
   const [startDate, setStartDate] = useState("");
-  const [contactName, setContactName] = useState("");
-  const [contactEmail, setContactEmail] = useState("");
+  const [contactName, setContactName] = useState(() => getStoredAuth().user?.name || "");
+  const [contactEmail, setContactEmail] = useState(() => getStoredAuth().user?.email || "");
   const [contactPhone, setContactPhone] = useState("");
 
   // Coupon Fields
@@ -75,16 +61,6 @@ function CheckoutForm() {
   const [paymentError, setPaymentError] = useState("");
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [bookingData, setBookingData] = useState(null);
-
-  // Sync authentication and load data
-  useEffect(() => {
-    const currentAuth = getStoredAuth();
-    setAuth(currentAuth);
-    if (currentAuth.user) {
-      setContactName(currentAuth.user.name || "");
-      setContactEmail(currentAuth.user.email || "");
-    }
-  }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -189,16 +165,19 @@ function CheckoutForm() {
       return;
     }
 
+    const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+    if (!keyId) {
+      setPaymentError("Razorpay is not configured. Add NEXT_PUBLIC_RAZORPAY_KEY_ID to .env.local.");
+      return;
+    }
+    if (typeof window === "undefined" || !window.Razorpay) {
+      setPaymentError("Payment gateway is loading. Please try again in a moment.");
+      return;
+    }
+
     setSubmitting(true);
 
     try {
-      // 1. Load Razorpay script
-      const loaded = await loadRazorpayScript();
-      if (!loaded) {
-        throw new Error("Failed to load Razorpay Payment Gateway. Please check your internet connection.");
-      }
-
-      // 2. Create Order on Backend
       const orderRes = await fetch(`${API}/api/create-order`, {
         method: "POST",
         headers: {
@@ -206,12 +185,12 @@ function CheckoutForm() {
           Authorization: `Bearer ${auth.token}`,
         },
         body: JSON.stringify({
-          amount: totalAmount * 100, // paise
+          amount: totalAmount * 100,
           currency: "INR",
-          receipt: `rcpt_${destId}_${Date.now()}`,
+          receipt: `book_${destId}_${Date.now()}`,
           notes: {
             destinationId: destId,
-            destinationName: destination?.name || destId,
+            destinationName: destination.name,
             numTravelers: String(numTravelers),
             startDate,
           },
@@ -223,23 +202,27 @@ function CheckoutForm() {
         throw new Error(orderJson.message || "Failed to initiate payment.");
       }
 
-      const orderData = orderJson.data;
-
-      // 3. Open Razorpay Checkout Modal
-      const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_Sv9nZiXDEaTXWM",
+      const orderData = orderJson.data || orderJson;
+      const rzp = new window.Razorpay({
+        key: keyId,
         amount: orderData.amount,
         currency: orderData.currency,
         name: "Travel Threads",
         description: `Trip booking to ${destination.name}`,
-        image: destination.heroImage ? normalizeImageUrl(destination.heroImage) : "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=100&q=80",
+        image: destination.heroImage
+          ? normalizeImageUrl(destination.heroImage)
+          : "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=100&q=80",
         order_id: orderData.order_id,
-        handler: async function (response) {
+        prefill: {
+          name: contactName,
+          email: contactEmail,
+          contact: contactPhone,
+        },
+        theme: {
+          color: "#2563eb",
+        },
+        handler: async (response) => {
           try {
-            setSubmitting(true);
-            setPaymentError("");
-
-            // 4. Verify Payment Signature on Backend
             const verifyRes = await fetch(`${API}/api/verify-payment`, {
               method: "POST",
               headers: {
@@ -271,31 +254,24 @@ function CheckoutForm() {
             });
             setBookingSuccess(true);
           } catch (err) {
-            setPaymentError(err.message || "Unable to verify signature. Please contact support.");
+            setPaymentError(err.message || "Unable to verify payment. Please contact support.");
           } finally {
             setSubmitting(false);
           }
         },
-        prefill: {
-          name: contactName,
-          email: contactEmail,
-          contact: contactPhone,
-        },
-        theme: {
-          color: "#2563eb",
-        },
         modal: {
-          ondismiss: function () {
+          ondismiss: () => {
             setSubmitting(false);
             setPaymentError("Payment process cancelled by user.");
           },
         },
-      };
+      });
 
-      const rzp = new window.Razorpay(options);
-      rzp.on("payment.failed", function (response) {
-        setPaymentError(`Payment Failed: ${response.error.description}`);
+      rzp.on("payment.failed", (response) => {
         setSubmitting(false);
+        setPaymentError(
+          response.error?.description || response.error?.reason || "Payment failed. Please try again."
+        );
       });
       rzp.open();
     } catch (err) {
@@ -376,6 +352,7 @@ function CheckoutForm() {
 
   return (
     <div className="container" style={{ paddingBottom: "var(--space-4xl)" }}>
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
       <div style={{ marginBottom: "var(--space-2xl)" }}>
         <span className="badge badge-accent" style={{ marginBottom: "var(--space-sm)" }}>🔒 Secure Checkout</span>
         <h1 style={{ fontSize: "var(--text-3xl)", marginBottom: "var(--space-xs)" }}>
@@ -491,7 +468,7 @@ function CheckoutForm() {
 
           <div style={{ marginTop: "var(--space-md)" }}>
             <p style={{ fontSize: "var(--text-xs)", color: "var(--text-muted)" }}>
-              🔒 Your contact credentials are secure. Payments are verified in real-time through Razorpay Standard Checkout.
+              🔒 Your contact credentials are secure. Bookings are processed instantly.
             </p>
           </div>
         </div>

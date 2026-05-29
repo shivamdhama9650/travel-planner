@@ -11,7 +11,7 @@ export default function RazorpayBookButton({
   destinationName,
   amountInRupees,
   className = "btn btn-accent package-book-btn",
-  children = "Book Now — Pay Online",
+  children = "Book Now - Pay Online",
   disabled = false,
 }) {
   const [loading, setLoading] = useState(false);
@@ -32,20 +32,10 @@ export default function RazorpayBookButton({
     }
 
     const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
-    console.log('🧭 Razorpay env -> keyId:', keyId);
-    console.log('🧭 Razorpay env -> allowTestFlag:', process.env.NEXT_PUBLIC_ALLOW_RAZORPAY_TEST_IN_PROD);
+    if (!keyId) {
       setMessage("Razorpay is not configured. Add NEXT_PUBLIC_RAZORPAY_KEY_ID to .env.local");
       setMessageType("error");
       return;
-    }
-
-    // Allow test keys in production if the explicit override flag is set to true (case‑insensitive)
-    const allowTestKey = String(process.env.NEXT_PUBLIC_ALLOW_RAZORPAY_TEST_IN_PROD || "").trim().toLowerCase() === "true";
-    if (process.env.NODE_ENV === "production" && String(keyId).toLowerCase().startsWith("rzp_test_") && !allowTestKey) {
-      setMessage("Payments are not configured for production yet. Please set a Razorpay Live key (rzp_live_...).");
-      setMessageType("error");
-      return;
-    }
     }
 
     if (typeof window === "undefined" || !window.Razorpay) {
@@ -105,7 +95,7 @@ export default function RazorpayBookButton({
         amount,
         currency,
         name: "Travel Threads",
-        description: `${destinationName} — Travel Package`,
+        description: `${destinationName} - Travel Package`,
         order_id,
         handler: async (response) => {
           try {
@@ -177,7 +167,7 @@ export default function RazorpayBookButton({
         disabled={disabled || loading}
         id={`pay-btn-${destinationId}`}
       >
-        {loading ? "Opening checkout…" : children}
+        {loading ? "Opening checkout..." : children}
       </button>
       {message ? (
         <p className={`payment-status payment-status-${messageType || "info"}`}>{message}</p>

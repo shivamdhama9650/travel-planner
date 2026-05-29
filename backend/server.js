@@ -28,10 +28,6 @@ const SUPABASE_JWKS = SUPABASE_URL
 
 const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || "";
 const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || "";
-const ALLOW_RAZORPAY_TEST_IN_PROD = String(process.env.ALLOW_RAZORPAY_TEST_IN_PROD || "")
-  .trim()
-  .toLowerCase() === "true";
-const isRazorpayTestKey = (key = "") => String(key || "").trim().toLowerCase().startsWith("rzp_test_");
 const razorpay =
   RAZORPAY_KEY_ID && RAZORPAY_KEY_SECRET
     ? new Razorpay({ key_id: RAZORPAY_KEY_ID, key_secret: RAZORPAY_KEY_SECRET })
@@ -161,10 +157,10 @@ const initMongoModels = () => {
       userId: { type: mongoose.Schema.Types.ObjectId, required: true, index: true },
       destinationId: { type: String, required: true, index: true },
       destinationName: { type: String, required: true },
-      amount: { type: Number, required: true, min: 1 }, // paise
+      amount: { type: Number, required: true, min: 1 },
       currency: { type: String, required: true, default: "INR" },
       razorpayOrderId: { type: String, required: true, index: true },
-      razorpayPaymentId: { type: String, required: true, index: true },
+      razorpayPaymentId: { type: String, required: true, unique: true, index: true },
       status: { type: String, enum: ["paid"], default: "paid" },
     },
     { timestamps: true }
@@ -423,59 +419,49 @@ const updatePackagePrice = async (destinationId, price) => {
 
 // ─── ROUTES ───────────────────────────────────────────────
 
-// POST /api/create-order — Razorpay order (amount in paise)
+// POST /api/create-order - create a Razorpay Standard Checkout order
 app.post("/api/create-order", authenticate, async (req, res) => {
-  const { amount, currency = "INR", receipt, notes } = req.body || {};
-  const amountPaise = Math.round(Number(amount));
-
-  if (!Number.isFinite(amountPaise) || amountPaise < 100) {
-    return res.status(400).json({
-      success: false,
-      message: "Amount must be at least 100 paise (₹1)",
-    });
-  }
-
   if (!razorpay) {
     return res.status(500).json({
       success: false,
-      message: "Razorpay is not configured. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in backend .env",
+      message: "Razorpay is not configured. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET.",
     });
   }
 
-  if (process.env.NODE_ENV === "production" && isRazorpayTestKey(RAZORPAY_KEY_ID) && !ALLOW_RAZORPAY_TEST_IN_PROD) {
-    return res.status(500).json({
-      success: false,
-      message:
-        "Razorpay is configured with a TEST key in production. Set Live keys (rzp_live_...) or set ALLOW_RAZORPAY_TEST_IN_PROD=true to override.",
-    });
+  const amount = Math.round(Number(req.body.amount));
+  const currency = String(req.body.currency || "INR").toUpperCase();
+  const receipt = String(req.body.receipt || `receipt_${Date.now()}`).slice(0, 40);
+
+  if (!Number.isFinite(amount) || amount < 100) {
+    return res.status(400).json({ success: false, message: "Amount must be at least 100 paise." });
   }
 
   try {
     const order = await razorpay.orders.create({
-      amount: amountPaise,
-      currency: String(currency).toUpperCase(),
-      receipt: receipt || `receipt_${Date.now()}`,
-      notes: notes && typeof notes === "object" ? notes : {},
+      amount,
+      currency,
+      receipt,
+      notes: req.body.notes && typeof req.body.notes === "object" ? req.body.notes : undefined,
     });
 
-    return res.json({
-      success: true,
-      data: {
-        order_id: order.id,
-        amount: order.amount,
-        currency: order.currency,
-      },
-    });
+    const data = {
+      order_id: order.id,
+      amount: order.amount,
+      currency: order.currency,
+    };
+
+    return res.json({ success: true, ...data, data });
   } catch (err) {
-    const statusCode = err?.statusCode === 401 ? 401 : 500;
-    return res.status(statusCode).json({
+    const status = err.statusCode === 401 ? 401 : 500;
+    return res.status(status).json({
       success: false,
-      message: err?.error?.description || err.message || "Failed to create Razorpay order",
+      message: status === 401 ? "Razorpay authentication failed." : "Could not create Razorpay order.",
+      error: err.error?.description || err.message,
     });
   }
 });
 
-// POST /api/verify-payment — HMAC signature verification
+// POST /api/verify-payment - verify Razorpay HMAC signature before confirming booking
 app.post("/api/verify-payment", authenticate, async (req, res) => {
   const {
     razorpay_order_id,
@@ -485,93 +471,84 @@ app.post("/api/verify-payment", authenticate, async (req, res) => {
     destinationName,
     amount,
     currency,
-  } = req.body || {};
+  } = req.body;
 
   if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
     return res.status(400).json({
       success: false,
-      message: "Missing razorpay_order_id, razorpay_payment_id, or razorpay_signature",
+      message: "Missing payment verification fields.",
     });
   }
 
   if (!RAZORPAY_KEY_SECRET) {
     return res.status(500).json({
       success: false,
-      message: "Razorpay is not configured on the server",
+      message: "Razorpay secret is not configured.",
     });
   }
 
-  const payload = `${razorpay_order_id}|${razorpay_payment_id}`;
-  const expectedSignature = crypto
+  const generatedSignature = crypto
     .createHmac("sha256", RAZORPAY_KEY_SECRET)
-    .update(payload)
+    .update(`${razorpay_order_id}|${razorpay_payment_id}`)
     .digest("hex");
 
-  if (expectedSignature !== razorpay_signature) {
-    return res.status(400).json({
-      success: false,
-      message: "Invalid payment signature",
-    });
+  const received = Buffer.from(String(razorpay_signature), "hex");
+  const expected = Buffer.from(generatedSignature, "hex");
+  const signatureMatches =
+    received.length === expected.length && crypto.timingSafeEqual(received, expected);
+
+  if (!signatureMatches) {
+    return res.status(400).json({ success: false, message: "Payment signature mismatch." });
   }
 
   if (!usingMongo || !Booking) {
     return res.status(503).json({
       success: false,
-      message: "Bookings require MongoDB. Please configure MONGO_URI.",
+      message: "Payment verified, but booking storage requires MongoDB. Please configure MONGO_URI.",
     });
   }
 
-  const normalizedDestinationId = String(destinationId || "").trim();
-  const normalizedDestinationName = String(destinationName || "").trim();
-  const amountPaise = Math.round(Number(amount));
-  const bookingCurrency = String(currency || "INR").toUpperCase();
-
-  if (!normalizedDestinationId || !normalizedDestinationName) {
-    return res.status(400).json({
-      success: false,
-      message: "Missing destinationId or destinationName for booking",
-    });
+  const numericAmount = Math.round(Number(amount));
+  if (!destinationId || !destinationName || !Number.isFinite(numericAmount) || numericAmount < 100) {
+    return res.status(400).json({ success: false, message: "Missing or invalid booking details." });
   }
 
-  if (!Number.isFinite(amountPaise) || amountPaise < 100) {
-    return res.status(400).json({
-      success: false,
-      message: "Invalid booking amount",
-    });
-  }
-
-  const booking = await Booking.findOneAndUpdate(
-    {
-      userId: req.user._id,
-      razorpayOrderId: razorpay_order_id,
-    },
-    {
-      $set: {
-        userId: req.user._id,
-        destinationId: normalizedDestinationId,
-        destinationName: normalizedDestinationName,
-        amount: amountPaise,
-        currency: bookingCurrency,
-        razorpayOrderId: razorpay_order_id,
-        razorpayPaymentId: razorpay_payment_id,
-        status: "paid",
+  try {
+    const booking = await Booking.findOneAndUpdate(
+      { razorpayPaymentId: String(razorpay_payment_id) },
+      {
+        $setOnInsert: {
+          userId: req.user._id,
+          destinationId: String(destinationId),
+          destinationName: String(destinationName),
+          amount: numericAmount,
+          currency: String(currency || "INR").toUpperCase(),
+          razorpayOrderId: String(razorpay_order_id),
+          razorpayPaymentId: String(razorpay_payment_id),
+          status: "paid",
+        },
       },
-    },
-    { upsert: true, new: true, setDefaultsOnInsert: true }
-  );
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
 
-  return res.json({
-    success: true,
-    message: "Payment verified successfully",
-    data: {
-      order_id: razorpay_order_id,
-      payment_id: razorpay_payment_id,
-      booking_id: String(booking._id),
-    },
-  });
+    return res.json({
+      success: true,
+      message: "Payment verified and booking confirmed.",
+      data: {
+        bookingId: String(booking._id),
+        razorpayOrderId: booking.razorpayOrderId,
+        razorpayPaymentId: booking.razorpayPaymentId,
+      },
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Payment verified, but booking confirmation failed.",
+      error: err.message,
+    });
+  }
 });
 
-// GET /api/admin/bookings — list all confirmed bookings (admin only)
 app.get("/api/admin/bookings", authenticate, requireRole("admin"), async (req, res) => {
   if (!usingMongo || !Booking || !User) {
     return res.status(503).json({
@@ -914,7 +891,7 @@ const startServer = async () => {
     console.log("  POST /api/create-order");
     console.log("  POST /api/verify-payment");
     console.log("  GET  /api/health");
-    console.log(`  💳 Razorpay: ${razorpay ? "configured" : "NOT configured"}\n`);
+    console.log(`  Razorpay: ${razorpay ? "configured" : "NOT configured"}\n`);
   });
 
   httpServer.on("error", (err) => {

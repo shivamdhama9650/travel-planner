@@ -2,8 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { getStoredAuth } from "../lib/auth";
+
 import RazorpayBookButton from "./RazorpayBookButton";
+import { getStoredAuth } from "../lib/auth";
 import { normalizeImageUrl } from "../lib/images";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
@@ -131,42 +132,19 @@ export default function OurPackages() {
                   📍 {pkg.region} · 📅 {pkg.duration}
                 </p>
 
-                {isAdmin ? (
-                  <div className="package-editor">
-                    <input
-                      type="number"
-                      min="1"
-                      className="calc-input"
-                      value={editPrices[pkg.id] ?? ""}
-                      onChange={(e) =>
-                        setEditPrices((prev) => ({
-                          ...prev,
-                          [pkg.id]: e.target.value,
-                        }))
-                      }
-                    />
-                    <button
-                      type="button"
-                      className="btn btn-primary"
-                      disabled={savingId === pkg.id || !auth?.token}
-                      onClick={() => savePrice(pkg.id)}
-                    >
-                      {savingId === pkg.id ? "Saving..." : "Save Price"}
-                    </button>
-                  </div>
-                ) : (
-                  <p className="package-price">
-                    Starting at ₹{Number(pkg.packagePrice).toLocaleString("en-IN")}
-                  </p>
-                )}
+                <p className="package-price">
+                  Starting at ₹{Number(pkg.packagePrice).toLocaleString("en-IN")}
+                </p>
+
                 <RazorpayBookButton
                   destinationId={pkg.id}
                   destinationName={pkg.name}
                   amountInRupees={pkg.packagePrice}
                   className="btn btn-accent package-book-btn"
                 >
-                  Book Now — ₹{Number(pkg.packagePrice).toLocaleString("en-IN")}
+                  Book Now - ₹{Number(pkg.packagePrice).toLocaleString("en-IN")}
                 </RazorpayBookButton>
+
               </article>
             ))}
           </div>
