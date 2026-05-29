@@ -2,15 +2,13 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { setStoredAuth, syncProfileWithBackend } from "../lib/auth";
+import { completeSignIn, setStoredAuth } from "../lib/auth";
 import { formatAuthError, signInWithGoogle } from "../lib/auth-oauth";
 import { supabase } from "../lib/supabase";
 
 export default function RegisterPage() {
-  const router = useRouter();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -58,12 +56,12 @@ export default function RegisterPage() {
         );
       }
 
-      const userProfile = await syncProfileWithBackend(accessToken);
+      const result = await completeSignIn(data.session);
       setStoredAuth({
-        token: accessToken,
-        user: userProfile,
+        token: result.token,
+        user: result.user,
       });
-      router.push("/");
+      window.location.href = "/";
     } catch (err) {
       setError(formatAuthError(err));
     } finally {

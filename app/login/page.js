@@ -2,15 +2,14 @@
 
 import Link from "next/link";
 import { useState, useEffect, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { setStoredAuth, syncProfileWithBackend } from "../lib/auth";
+import { completeSignIn, setStoredAuth } from "../lib/auth";
 import { formatAuthError, signInWithGoogle } from "../lib/auth-oauth";
 import { supabase } from "../lib/supabase";
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -54,12 +53,12 @@ function LoginForm() {
       const accessToken = data?.session?.access_token;
       if (!accessToken) throw new Error("No access token from Supabase");
 
-      const userProfile = await syncProfileWithBackend(accessToken);
+      const result = await completeSignIn(data.session);
       setStoredAuth({
-        token: accessToken,
-        user: userProfile,
+        token: result.token,
+        user: result.user,
       });
-      router.push("/");
+      window.location.href = "/";
     } catch (err) {
       setError(formatAuthError(err));
     } finally {

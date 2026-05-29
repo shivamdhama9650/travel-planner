@@ -746,6 +746,22 @@ ul, ol {
   transform: translateY(-1px);
 }
 
+.auth-spinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: var(--space-lg) auto 0;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary-light);
+  border-radius: 50%;
+  animation: authSpin 0.8s linear infinite;
+}
+
+@keyframes authSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .btn-google::before {
   content: "G";
   display: inline-flex;

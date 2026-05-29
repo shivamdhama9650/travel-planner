@@ -1,77 +1,106 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
-import { setStoredAuth, syncProfileWithBackend } from "../../lib/auth";
+import { completeSignIn, setStoredAuth } from "../../lib/auth";
 import { formatAuthError } from "../../lib/auth-oauth";
 import { supabase } from "../../lib/supabase";
 
 function AuthCallbackContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [message, setMessage] = useState("Finishing sign-in…");
+  const [error, setError] = useState("");
+  const started = useRef(false);
 
   useEffect(() => {
+    if (started.current) return;
+    started.current = true;
+
+    const wakeTimer = setTimeout(() => {
+      setMessage("Waking up server… this can take up to a minute on first visit.");
+    }, 4000);
+
     const completeAuth = async () => {
       if (!supabase) {
-        router.replace("/login?error=supabase_not_configured");
+        setError("Supabase is not configured.");
         return;
       }
 
       const oauthError = searchParams.get("error_description") || searchParams.get("error");
       if (oauthError) {
-        router.replace(`/login?error=${encodeURIComponent(oauthError)}`);
+        setError(decodeURIComponent(oauthError));
         return;
       }
 
       try {
         const code = searchParams.get("code");
+        let session = null;
 
         if (code) {
-          const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-          if (error) throw error;
-          if (!data.session?.access_token) {
-            throw new Error("No session returned after Google sign-in.");
-          }
-
-          const userProfile = await syncProfileWithBackend(data.session.access_token);
-          setStoredAuth({
-            token: data.session.access_token,
-            user: userProfile,
-          });
-          router.replace("/");
-          return;
+          const { data, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+          if (exchangeError) throw exchangeError;
+          session = data.session;
+        } else {
+          const { data, error: sessionError } = await supabase.auth.getSession();
+          if (sessionError) throw sessionError;
+          session = data.session;
         }
 
-        const { data, error } = await supabase.auth.getSession();
-        if (error) throw error;
-        if (!data.session?.access_token) {
-          throw new Error("Sign-in session not found. Please try again.");
+        if (!session?.access_token) {
+          throw new Error("Sign-in session not found. Please try Google sign-in again.");
         }
 
-        const userProfile = await syncProfileWithBackend(data.session.access_token);
+        setMessage("Syncing your profile…");
+        const result = await completeSignIn(session);
+
         setStoredAuth({
-          token: data.session.access_token,
-          user: userProfile,
+          token: result.token,
+          user: result.user,
         });
-        router.replace("/");
+
+        clearTimeout(wakeTimer);
+
+        if (result.backendSyncFailed) {
+          setMessage("Signed in! Opening app… (profile will fully sync when server is ready)");
+        } else {
+          setMessage("Success! Opening app…");
+        }
+
+        // Hard redirect — more reliable than router.replace on mobile browsers
+        window.location.replace("/");
       } catch (err) {
+        clearTimeout(wakeTimer);
         const text = formatAuthError(err);
-        setMessage(text);
-        router.replace(`/login?error=${encodeURIComponent(text)}`);
+        setError(text);
+        setMessage("");
       }
     };
 
     completeAuth();
-  }, [router, searchParams]);
+
+    return () => clearTimeout(wakeTimer);
+  }, [searchParams]);
 
   return (
     <main className="auth-page">
-      <p className="auth-subtitle" style={{ textAlign: "center" }}>
-        {message}
-      </p>
+      <div className="auth-card" style={{ textAlign: "center" }}>
+        {error ? (
+          <>
+            <p className="auth-error">{error}</p>
+            <Link href="/login" className="btn btn-primary" style={{ marginTop: "1rem" }}>
+              Back to login
+            </Link>
+          </>
+        ) : (
+          <>
+            <p className="auth-subtitle">{message}</p>
+            <div className="auth-spinner" aria-hidden="true" />
+          </>
+        )}
+      </div>
     </main>
   );
 }
