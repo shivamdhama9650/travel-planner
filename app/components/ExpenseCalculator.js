@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 
 const DESTINATIONS = [
   { id: "manali", name: "Manali" },
@@ -96,21 +96,12 @@ const ICONS = {
 };
 
 export default function ExpenseCalculator({ defaultDestination = "" }) {
-  const [destination, setDestination] = useState(defaultDestination);
+  const [destination, setDestination] = useState(() => defaultDestination);
   const [travelers, setTravelers] = useState(2);
   const [days, setDays] = useState(3);
   const [tier, setTier] = useState("midRange");
-  const [result, setResult] = useState(null);
-
-  useEffect(() => {
-    if (defaultDestination) setDestination(defaultDestination);
-  }, [defaultDestination]);
-
-  useEffect(() => {
-    if (!destination || !EXPENSE_DATA[destination]) {
-      setResult(null);
-      return;
-    }
+  const result = useMemo(() => {
+    if (!destination || !EXPENSE_DATA[destination]) return null;
 
     const costs = EXPENSE_DATA[destination][tier];
     const breakdown = {
@@ -121,12 +112,13 @@ export default function ExpenseCalculator({ defaultDestination = "" }) {
       miscellaneous: costs.misc * days * travelers,
     };
     const total = Object.values(breakdown).reduce((s, v) => s + v, 0);
-    setResult({
+
+    return {
       breakdown,
       total,
       perPerson: Math.round(total / travelers),
       dailyPerPerson: Math.round(total / travelers / days),
-    });
+    };
   }, [destination, travelers, days, tier]);
 
   const maxBarValue = result

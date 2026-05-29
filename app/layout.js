@@ -1,6 +1,5 @@
 import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
-import TravelBot from "./components/TravelBot";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -28,7 +27,6 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${outfit.variable} ${inter.variable}`}>
       <body>
         {children}
-        <TravelBot />
       </body>
     </html>
   );

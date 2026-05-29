@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useMemo, useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import DestinationCard from "../components/DestinationCard";
@@ -84,7 +84,6 @@ const REGIONS = ["All", "North India", "West India", "Northeast India"];
 
 export default function DestinationsPage() {
   const [destinations, setDestinations] = useState([]);
-  const [filtered, setFiltered] = useState([]);
   const [region, setRegion] = useState("All");
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("rating");
@@ -105,7 +104,7 @@ export default function DestinationsPage() {
     load();
   }, []);
 
-  useEffect(() => {
+  const filtered = useMemo(() => {
     let result = [...destinations];
 
     if (region !== "All") {
@@ -126,7 +125,7 @@ export default function DestinationsPage() {
     else if (sort === "budget") result.sort((a, b) => a.budgetPerDay - b.budgetPerDay);
     else if (sort === "name") result.sort((a, b) => a.name.localeCompare(b.name));
 
-    setFiltered(result);
+    return result;
   }, [destinations, region, search, sort]);
 
   return (
@@ -138,7 +137,7 @@ export default function DestinationsPage() {
           <h1>
             Explore <span className="gradient-text">Destinations</span>
           </h1>
-          <p>Discover India's most incredible places with curated itineraries</p>
+          <p>Discover India’s most incredible places with curated itineraries</p>
         </div>
       </div>
 

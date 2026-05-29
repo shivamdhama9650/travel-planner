@@ -60,7 +60,7 @@ export default function BookPage() {
               margin: "0 auto var(--space-xl)",
             }}
           >
-            Choose from our hand-curated packages across India's most iconic destinations.
+            Choose from our hand-curated packages across India’s most iconic destinations.
             Flexible budgets, detailed itineraries, and smart expense planning included.
           </p>
           <div

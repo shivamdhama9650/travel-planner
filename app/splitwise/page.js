@@ -4,27 +4,31 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 export default function SplitwisePage() {
-  const [travelers, setTravelers] = useState(["Amit", "Pooja", "Rahul", "Neha"]);
+  const [travelers, setTravelers] = useState(() => {
+    try {
+      const saved = localStorage.getItem("yatra_travelers");
+      const parsed = saved ? JSON.parse(saved) : null;
+      return Array.isArray(parsed) && parsed.length ? parsed : ["Amit", "Pooja", "Rahul", "Neha"];
+    } catch {
+      return ["Amit", "Pooja", "Rahul", "Neha"];
+    }
+  });
   const [newTraveler, setNewTraveler] = useState("");
-  const [expenses, setExpenses] = useState([]);
+  const [expenses, setExpenses] = useState(() => {
+    try {
+      const saved = localStorage.getItem("yatra_expenses");
+      const parsed = saved ? JSON.parse(saved) : null;
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  });
 
   // Form state
   const [desc, setDesc] = useState("");
   const [amount, setAmount] = useState("");
-  const [payer, setPayer] = useState("");
-  const [splitWith, setSplitWith] = useState([]);
-
-  // Load from local storage
-  useEffect(() => {
-    const savedTravelers = localStorage.getItem("yatra_travelers");
-    const savedExpenses = localStorage.getItem("yatra_expenses");
-    if (savedTravelers) {
-      setTravelers(JSON.parse(savedTravelers));
-    }
-    if (savedExpenses) {
-      setExpenses(JSON.parse(savedExpenses));
-    }
-  }, []);
+  const [payer, setPayer] = useState(() => travelers[0] || "");
+  const [splitWith, setSplitWith] = useState(() => [...travelers]);
 
   // Save to local storage when state changes
   useEffect(() => {
@@ -35,14 +39,6 @@ export default function SplitwisePage() {
     localStorage.setItem("yatra_expenses", JSON.stringify(expenses));
   }, [expenses]);
 
-  // Set default payer and split check list when travelers change
-  useEffect(() => {
-    if (travelers.length > 0 && !payer) {
-      setPayer(travelers[0]);
-    }
-    setSplitWith(travelers);
-  }, [travelers, payer]);
-
   const handleAddTraveler = (e) => {
     e.preventDefault();
     if (!newTraveler.trim()) return;
@@ -50,15 +46,24 @@ export default function SplitwisePage() {
       alert("Traveler already exists!");
       return;
     }
-    setTravelers([...travelers, newTraveler.trim()]);
+    const updated = [...travelers, newTraveler.trim()];
+    setTravelers(updated);
+    setSplitWith((prev) => {
+      const next = new Set(prev);
+      next.add(newTraveler.trim());
+      return Array.from(next);
+    });
+    if (!payer) setPayer(updated[0] || "");
     setNewTraveler("");
   };
 
   const handleRemoveTraveler = (name) => {
     if (confirm(`Are you sure you want to remove ${name}? This will clear any associated expenses.`)) {
-      setTravelers(travelers.filter((t) => t !== name));
+      const updatedTravelers = travelers.filter((t) => t !== name);
+      setTravelers(updatedTravelers);
+      setSplitWith((prev) => prev.filter((t) => t !== name));
       setExpenses(expenses.filter((exp) => exp.payer !== name));
-      if (payer === name) setPayer(travelers[0] || "");
+      if (payer === name) setPayer(updatedTravelers[0] || "");
     }
   };
 
@@ -194,7 +199,7 @@ export default function SplitwisePage() {
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container animate-fadeInUp stagger-2">
 
-          <div className="calculator" style={{ gridTemplateColumns: "1fr 1fr", gap: "var(--space-2xl)" }}>
+          <div className="calculator">
 
             {/* Left side: Setup travelers & Add expense */}
             <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-xl)" }}>
@@ -267,7 +272,13 @@ export default function SplitwisePage() {
                     />
                   </div>
 
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-md)" }}>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+                      gap: "var(--space-md)",
+                    }}
+                  >
                     <div className="calc-field">
                       <label className="calc-label">Total Amount (₹)</label>
                       <input
@@ -312,7 +323,7 @@ export default function SplitwisePage() {
 
                     <div style={{
                       display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
+                      gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
                       gap: "8px",
                       background: "var(--bg-dark)",
                       padding: "var(--space-sm) var(--space-md)",
@@ -417,7 +428,13 @@ export default function SplitwisePage() {
                     {/* Net Balances breakdown */}
                     <div>
                       <div className="calc-label" style={{ marginBottom: "var(--space-sm)" }}>Individual Net Balances</div>
-                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                          gap: "8px",
+                        }}
+                      >
                         {Object.entries(balances).map(([name, bal]) => {
                           const isCreditor = bal > 0.1;
                           const isDebtor = bal < -0.1;
@@ -480,7 +497,9 @@ export default function SplitwisePage() {
                         border: "1px solid var(--border-light)",
                         display: "flex",
                         justifyContent: "space-between",
-                        alignItems: "center"
+                        alignItems: "center",
+                        gap: "12px",
+                        flexWrap: "wrap",
                       }}
                     >
                       <div style={{ flex: 1 }}>

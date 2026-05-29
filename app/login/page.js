@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, Suspense } from "react";
+import { useMemo, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -17,11 +17,10 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
-  useEffect(() => {
+  const queryError = useMemo(() => {
     const paramError = searchParams.get("error");
-    if (paramError) {
-      setError(formatAuthError({ message: decodeURIComponent(paramError) }));
-    }
+    if (!paramError) return "";
+    return formatAuthError({ message: decodeURIComponent(paramError) });
   }, [searchParams]);
 
   const handleGoogle = async () => {
@@ -124,7 +123,7 @@ function LoginForm() {
       >
         {loading ? "Signing in..." : "Login with email"}
       </button>
-      {error ? <p className="auth-error">{error}</p> : null}
+      {error || queryError ? <p className="auth-error">{error || queryError}</p> : null}
 
       <p className="auth-switch">
         New here? <Link href="/register">Create an account</Link>

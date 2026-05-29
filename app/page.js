@@ -3,6 +3,7 @@ import Image from "next/image";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import DestinationCard from "./components/DestinationCard";
+import TravelBot from "./components/TravelBot";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -348,6 +349,7 @@ export default async function Home() {
       </section>
 
       <Footer />
+      <TravelBot />
     </>
   );
 }
