@@ -9,7 +9,13 @@ const { createRemoteJWKSet, jwtVerify } = require("jose");
 const app = express();
 const PORT = Number(process.env.PORT) || 3001;
 const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/travel-planner";
-const SUPABASE_URL = process.env.SUPABASE_URL || "";
+const SUPABASE_URL = (
+  process.env.SUPABASE_URL ||
+  process.env.NEXT_PUBLIC_SUPABASE_URL ||
+  ""
+)
+  .trim()
+  .replace(/\/$/, "");
 const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || "")
   .split(",")
   .map((e) => e.trim().toLowerCase())
@@ -633,6 +639,7 @@ app.get("/api/health", async (req, res) => {
   res.json({
     status: "ok",
     mode: usingMongo ? "mongodb" : "json-fallback",
+    authConfigured: Boolean(SUPABASE_URL && SUPABASE_JWKS),
     destinations: destinations.length,
     timestamp: new Date().toISOString(),
   });
@@ -647,6 +654,7 @@ const startServer = async () => {
     console.log(`\n🌍 Travel Planner API running on http://localhost:${PORT}`);
     console.log(`📍 ${destinations.length} destinations available`);
     console.log(`🗄️ Store mode: ${usingMongo ? "MongoDB (primary)" : "JSON fallback"}`);
+    console.log(`🔐 Supabase auth: ${SUPABASE_URL ? "configured" : "NOT configured (set SUPABASE_URL on Render)"}`);
     console.log("\nEndpoints:");
     console.log("  POST /api/auth/register  (deprecated; use Supabase)");
     console.log("  POST /api/auth/login     (deprecated; use Supabase)");
