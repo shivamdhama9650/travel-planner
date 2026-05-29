@@ -45,6 +45,7 @@ let jsonPackagePrices = {};
 let Destination;
 let PackagePrice;
 let User;
+let Booking;
 
 const slugifyDestinationName = (value) =>
   String(value || "")
@@ -151,9 +152,24 @@ const initMongoModels = () => {
     { timestamps: true }
   );
 
+  const bookingSchema = new mongoose.Schema(
+    {
+      userId: { type: mongoose.Schema.Types.ObjectId, required: true, index: true },
+      destinationId: { type: String, required: true, index: true },
+      destinationName: { type: String, required: true },
+      amount: { type: Number, required: true, min: 1 }, // paise
+      currency: { type: String, required: true, default: "INR" },
+      razorpayOrderId: { type: String, required: true, index: true },
+      razorpayPaymentId: { type: String, required: true, index: true },
+      status: { type: String, enum: ["paid"], default: "paid" },
+    },
+    { timestamps: true }
+  );
+
   Destination = mongoose.models.Destination || mongoose.model("Destination", destinationSchema, "destinations");
   PackagePrice = mongoose.models.PackagePrice || mongoose.model("PackagePrice", packageSchema, "package_prices");
   User = mongoose.models.User || mongoose.model("User", userSchema, "users");
+  Booking = mongoose.models.Booking || mongoose.model("Booking", bookingSchema, "bookings");
 };
 
 const seedMongoFromJson = async () => {
@@ -404,7 +420,7 @@ const updatePackagePrice = async (destinationId, price) => {
 // ─── ROUTES ───────────────────────────────────────────────
 
 // POST /api/create-order — Razorpay order (amount in paise)
-app.post("/api/create-order", async (req, res) => {
+app.post("/api/create-order", authenticate, async (req, res) => {
   const { amount, currency = "INR", receipt, notes } = req.body || {};
   const amountPaise = Math.round(Number(amount));
 
@@ -448,8 +464,16 @@ app.post("/api/create-order", async (req, res) => {
 });
 
 // POST /api/verify-payment — HMAC signature verification
-app.post("/api/verify-payment", async (req, res) => {
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body || {};
+app.post("/api/verify-payment", authenticate, async (req, res) => {
+  const {
+    razorpay_order_id,
+    razorpay_payment_id,
+    razorpay_signature,
+    destinationId,
+    destinationName,
+    amount,
+    currency,
+  } = req.body || {};
 
   if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
     return res.status(400).json({
@@ -478,14 +502,89 @@ app.post("/api/verify-payment", async (req, res) => {
     });
   }
 
+  if (!usingMongo || !Booking) {
+    return res.status(503).json({
+      success: false,
+      message: "Bookings require MongoDB. Please configure MONGO_URI.",
+    });
+  }
+
+  const normalizedDestinationId = String(destinationId || "").trim();
+  const normalizedDestinationName = String(destinationName || "").trim();
+  const amountPaise = Math.round(Number(amount));
+  const bookingCurrency = String(currency || "INR").toUpperCase();
+
+  if (!normalizedDestinationId || !normalizedDestinationName) {
+    return res.status(400).json({
+      success: false,
+      message: "Missing destinationId or destinationName for booking",
+    });
+  }
+
+  if (!Number.isFinite(amountPaise) || amountPaise < 100) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid booking amount",
+    });
+  }
+
+  const booking = await Booking.findOneAndUpdate(
+    {
+      userId: req.user._id,
+      razorpayOrderId: razorpay_order_id,
+    },
+    {
+      $set: {
+        userId: req.user._id,
+        destinationId: normalizedDestinationId,
+        destinationName: normalizedDestinationName,
+        amount: amountPaise,
+        currency: bookingCurrency,
+        razorpayOrderId: razorpay_order_id,
+        razorpayPaymentId: razorpay_payment_id,
+        status: "paid",
+      },
+    },
+    { upsert: true, new: true, setDefaultsOnInsert: true }
+  );
+
   return res.json({
     success: true,
     message: "Payment verified successfully",
     data: {
       order_id: razorpay_order_id,
       payment_id: razorpay_payment_id,
+      booking_id: String(booking._id),
     },
   });
+});
+
+// GET /api/bookings — list current user's confirmed bookings
+app.get("/api/bookings", authenticate, async (req, res) => {
+  if (!usingMongo || !Booking) {
+    return res.status(503).json({
+      success: false,
+      message: "Bookings require MongoDB. Please configure MONGO_URI.",
+    });
+  }
+
+  const bookings = await Booking.find({ userId: req.user._id })
+    .sort({ createdAt: -1 })
+    .lean();
+
+  const data = bookings.map((b) => ({
+    id: String(b._id),
+    destinationId: b.destinationId,
+    destinationName: b.destinationName,
+    amount: b.amount,
+    currency: b.currency,
+    razorpayOrderId: b.razorpayOrderId,
+    razorpayPaymentId: b.razorpayPaymentId,
+    status: b.status,
+    createdAt: b.createdAt,
+  }));
+
+  return res.json({ success: true, count: data.length, data });
 });
 
 app.post("/api/auth/register", async (_req, res) =>

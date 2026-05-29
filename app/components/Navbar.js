@@ -102,6 +102,9 @@ export default function Navbar() {
                 <span className="navbar-user">
                   {user.name} {user.role === "admin" ? "• Admin" : ""}
                 </span>
+                <Link href="/bookings" className="navbar-link" id="nav-bookings">
+                  My Bookings
+                </Link>
                 <button
                   type="button"
                   className="navbar-link navbar-auth-link"
@@ -142,6 +145,14 @@ export default function Navbar() {
       />
 
       <div className={`navbar-mobile ${mobileOpen ? "open" : ""}`} id="navbar-mobile-menu">
+        {user ? (
+          <div className="navbar-mobile-profile">
+            <div className="navbar-mobile-name">{user.name}</div>
+            <div className="navbar-mobile-meta">
+              {user.email ? user.email : ""} {user.role === "admin" ? "• Admin" : ""}
+            </div>
+          </div>
+        ) : null}
         {links.map((link) => (
           <Link
             key={link.href}
@@ -154,16 +165,21 @@ export default function Navbar() {
           </Link>
         ))}
         {user ? (
-          <button
-            type="button"
-            className="navbar-link"
-            onClick={() => {
-              handleLogout();
-              setMobileOpen(false);
-            }}
-          >
-            Logout ({user.role})
-          </button>
+          <>
+            <Link href="/bookings" className="navbar-link" onClick={() => setMobileOpen(false)}>
+              My Bookings
+            </Link>
+            <button
+              type="button"
+              className="navbar-link"
+              onClick={() => {
+                handleLogout();
+                setMobileOpen(false);
+              }}
+            >
+              Logout
+            </button>
+          </>
         ) : (
           <Link href="/login" className="navbar-link" onClick={() => setMobileOpen(false)}>
             Login / Register

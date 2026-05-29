@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Script from "next/script";
+import { getStoredAuth } from "../lib/auth";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
@@ -20,6 +21,15 @@ export default function RazorpayBookButton({
   const handlePayment = async () => {
     setMessage("");
     setMessageType("");
+
+    const auth = getStoredAuth();
+    if (!auth?.token) {
+      const next = typeof window !== "undefined" ? window.location.pathname : "/";
+      window.location.href = `/login?error=${encodeURIComponent(
+        "Please login to book and pay."
+      )}&next=${encodeURIComponent(next)}`;
+      return;
+    }
 
     const keyId = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
     if (!keyId) {
@@ -45,23 +55,37 @@ export default function RazorpayBookButton({
     setLoading(true);
 
     try {
-      const orderRes = await fetch(`${API}/api/create-order`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount: amountPaise,
-          currency: "INR",
-          receipt: `book_${destinationId}_${Date.now()}`,
-          notes: {
-            destinationId: String(destinationId),
-            destinationName: String(destinationName),
+      const createOrder = async () => {
+        const res = await fetch(`${API}/api/create-order`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${auth.token}`,
           },
-        }),
-      });
+          body: JSON.stringify({
+            amount: amountPaise,
+            currency: "INR",
+            receipt: `book_${destinationId}_${Date.now()}`,
+            notes: {
+              destinationId: String(destinationId),
+              destinationName: String(destinationName),
+              userEmail: String(auth?.user?.email || ""),
+            },
+          }),
+        });
+        const json = await res.json();
+        if (!res.ok || !json.success) {
+          throw new Error(json.message || "Could not create payment order");
+        }
+        return json;
+      };
 
-      const orderJson = await orderRes.json();
-      if (!orderRes.ok || !orderJson.success) {
-        throw new Error(orderJson.message || "Could not create payment order");
+      // Render cold-start can fail the first request; try once more quickly.
+      let orderJson;
+      try {
+        orderJson = await createOrder();
+      } catch (err) {
+        orderJson = await createOrder();
       }
 
       const { order_id, amount, currency } = orderJson.data;
@@ -77,11 +101,18 @@ export default function RazorpayBookButton({
           try {
             const verifyRes = await fetch(`${API}/api/verify-payment`, {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${auth.token}`,
+              },
               body: JSON.stringify({
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
+                destinationId: String(destinationId),
+                destinationName: String(destinationName),
+                amount: Number(amount),
+                currency: String(currency),
               }),
             });
 
@@ -92,7 +123,7 @@ export default function RazorpayBookButton({
 
             setMessage(`Payment successful for ${destinationName}! Booking confirmed.`);
             setMessageType("success");
-            window.location.href = `/book?success=1&destination=${encodeURIComponent(destinationId)}`;
+            window.location.href = `/bookings?success=1`;
           } catch (err) {
             setMessage(err.message || "Verification failed");
             setMessageType("error");

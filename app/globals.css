@@ -649,6 +649,25 @@ ul, ol {
   margin-top: var(--space-sm);
 }
 
+.navbar-mobile-profile {
+  padding: var(--space-md);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: hsla(220, 25%, 18%, 0.45);
+}
+
+.navbar-mobile-name {
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.navbar-mobile-meta {
+  margin-top: 0.25rem;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  word-break: break-word;
+}
+
 @media (max-width: 900px) {
   .navbar-links {
     display: none !important;
