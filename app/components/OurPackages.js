@@ -136,6 +136,31 @@ export default function OurPackages() {
                   Starting at ₹{Number(pkg.packagePrice).toLocaleString("en-IN")}
                 </p>
 
+                {isAdmin ? (
+                  <div className="package-editor">
+                    <input
+                      type="number"
+                      min="1"
+                      className="calc-input"
+                      value={editPrices[pkg.id] ?? ""}
+                      onChange={(e) =>
+                        setEditPrices((prev) => ({
+                          ...prev,
+                          [pkg.id]: e.target.value,
+                        }))
+                      }
+                      aria-label={`Package price for ${pkg.name}`}
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      disabled={savingId === pkg.id || !auth?.token}
+                      onClick={() => savePrice(pkg.id)}
+                    >
+                      {savingId === pkg.id ? "Saving..." : "Save Price"}
+                    </button>
+                  </div>
+                ) : (
                 <RazorpayBookButton
                   destinationId={pkg.id}
                   destinationName={pkg.name}
@@ -144,6 +169,7 @@ export default function OurPackages() {
                 >
                   Book Now - ₹{Number(pkg.packagePrice).toLocaleString("en-IN")}
                 </RazorpayBookButton>
+                )}
 
               </article>
             ))}
