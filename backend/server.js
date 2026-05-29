@@ -597,7 +597,7 @@ const startServer = async () => {
   await connectMongoIfAvailable();
   const destinations = await getAllDestinations();
 
-  app.listen(PORT, () => {
+  const httpServer = app.listen(PORT, () => {
     console.log(`\n🌍 Travel Planner API running on http://localhost:${PORT}`);
     console.log(`📍 ${destinations.length} destinations available`);
     console.log(`🗄️ Store mode: ${usingMongo ? "MongoDB (primary)" : "JSON fallback"}`);
@@ -614,6 +614,20 @@ const startServer = async () => {
     console.log("  GET  /api/regions");
     console.log("  GET  /api/health\n");
   });
+
+  httpServer.on("error", (err) => {
+    if (err.code === "EADDRINUSE") {
+      console.error(`\n❌ Port ${PORT} is already in use. Stop other backend instances (Ctrl+C), then restart.\n`);
+      process.exit(1);
+    }
+    throw err;
+  });
+
+  for (const signal of ["SIGINT", "SIGTERM"]) {
+    process.on(signal, () => {
+      httpServer.close(() => process.exit(0));
+    });
+  }
 };
 
 startServer();
