@@ -1,0 +1,834 @@
+[
+  {
+    "id": "manali",
+    "name": "Manali",
+    "tagline": "Gateway to the Himalayas",
+    "region": "North India",
+    "state": "Himachal Pradesh",
+    "description": "Nestled in the Kullu Valley between snow-capped peaks and lush pine forests, Manali is a paradise for adventure lovers and honeymooners alike. From the roaring Beas River to the mystical Rohtang Pass, every corner tells a story of Himalayan grandeur.",
+    "heroImage": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1655470062377-ef3f5161960a?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fG1hbmFsaXxlbnwwfHwwfHx8MA%3D%3D",
+      "https://images.unsplash.com/photo-1712388429936-2abc7144083f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fG1hbmFsaXxlbnwwfHwwfHx8MA%3D%3D",
+      "https://media.istockphoto.com/id/935681964/photo/paragliding-in-solang-valley.webp?a=1&b=1&s=612x612&w=0&k=20&c=Db8fYsGrFybZL_dTwJkSOl7rc6A72eBgoZdeDGXD84c="
+    ],
+    "rating": 4.7,
+    "bestTime": "October – June",
+    "duration": "4-5 Days",
+    "altitude": "2,050 m",
+    "vlogUrl": "https://www.youtube.com/embed/8o4rCgAki_0",
+    "highlights": ["Rohtang Pass", "Solang Valley", "Old Manali", "Hadimba Temple", "Beas River"],
+    "travelTips": [
+      "Book Rohtang Pass permits online in advance",
+      "Carry warm clothes even in summer",
+      "Try local Himachali cuisine at Old Manali cafés"
+    ],
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Arrival & Old Manali",
+        "activities": [
+          "Arrive in Manali via Volvo bus or flight to Bhuntar",
+          "Check into hotel and freshen up",
+          "Explore Old Manali's cafés and hippie culture",
+          "Visit Hadimba Temple (Dhungri Van Vihar)",
+          "Evening stroll along Mall Road"
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Solang Valley Adventure",
+        "activities": [
+          "Early morning departure to Solang Valley",
+          "Try paragliding or zorbing (seasonal)",
+          "Cable car ride to Solang summit",
+          "Snow activities and photography",
+          "Return for evening at Vashisht Hot Springs"
+        ]
+      },
+      {
+        "day": 3,
+        "title": "Rohtang Pass Expedition",
+        "activities": [
+          "Start early (6 AM) for Rohtang Pass",
+          "Stop at Marhi for breakfast and views",
+          "Snow play and photography at Rohtang (3,978m)",
+          "Visit Rahala Waterfalls on the way back",
+          "Evening bonfire at hotel"
+        ]
+      },
+      {
+        "day": 4,
+        "title": "Naggar & Kullu",
+        "activities": [
+          "Visit Naggar Castle and art gallery",
+          "Explore Jana Waterfall trek",
+          "Afternoon river rafting on Beas River",
+          "Visit Kullu shawl factories",
+          "Departure or extended stay"
+        ]
+      }
+    ],
+    "expenses": {
+      "budget": { "accommodation": 800, "food": 500, "transport": 400, "activities": 600, "misc": 200 },
+      "midRange": { "accommodation": 2500, "food": 1000, "transport": 800, "activities": 1500, "misc": 500 },
+      "luxury": { "accommodation": 8000, "food": 2500, "transport": 2000, "activities": 3000, "misc": 1000 }
+    }
+  },
+  {
+    "id": "shimla",
+    "name": "Shimla",
+    "tagline": "Queen of Hill Stations",
+    "region": "North India",
+    "state": "Himachal Pradesh",
+    "description": "Once the summer capital of British India, Shimla enchants visitors with its colonial architecture, winding mountain roads, and panoramic Himalayan views. The iconic Mall Road, toy train, and snow-kissed winters make it a timeless Indian destination.",
+    "heroImage": "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=1920&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1609948543911-7f01ff385be5?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8c2hpbWxhfGVufDB8fDB8fHww",
+      "https://images.unsplash.com/photo-1634539132466-abaca3a2438b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8c2hpbWxhfGVufDB8fDB8fHww",
+      "https://images.unsplash.com/photo-1610178009236-02461f18b272?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHNoaW1sYXxlbnwwfHwwfHx8MA%3D%3D"
+    ],
+    "rating": 4.5,
+    "bestTime": "March – June, December",
+    "duration": "3-4 Days",
+    "altitude": "2,276 m",
+    "vlogUrl": "https://www.youtube.com/embed/k5XyUvK64eY",
+    "highlights": ["Mall Road", "Christ Church", "Jakhoo Temple", "Kufri", "Toy Train"],
+    "travelTips": [
+      "Book Kalka-Shimla toy train tickets well in advance",
+      "Mall Road is pedestrian-only – enjoy car-free walks",
+      "Visit during December for snowfall experience"
+    ],
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Heritage Walk",
+        "activities": [
+          "Arrive via toy train or road from Chandigarh",
+          "Walk the Ridge and Mall Road",
+          "Visit Christ Church and Gaiety Theatre",
+          "Explore Lakkar Bazaar for wooden crafts",
+          "Evening at Scandal Point with mountain views"
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Kufri & Nature",
+        "activities": [
+          "Morning trip to Kufri (16 km from Shimla)",
+          "Horse riding and yak rides",
+          "Visit Himalayan Nature Park",
+          "Afternoon at Green Valley viewpoint",
+          "Evening shopping at Mall Road"
+        ]
+      },
+      {
+        "day": 3,
+        "title": "Temples & Trails",
+        "activities": [
+          "Trek to Jakhoo Temple (Hanuman statue)",
+          "Visit Viceregal Lodge (Indian Institute of Advanced Study)",
+          "Nature walk at Annandale",
+          "Visit Shimla State Museum",
+          "Farewell dinner at a heritage restaurant"
+        ]
+      }
+    ],
+    "expenses": {
+      "budget": { "accommodation": 700, "food": 400, "transport": 300, "activities": 400, "misc": 200 },
+      "midRange": { "accommodation": 2200, "food": 900, "transport": 600, "activities": 1200, "misc": 400 },
+      "luxury": { "accommodation": 7000, "food": 2000, "transport": 1500, "activities": 2500, "misc": 800 }
+    }
+  },
+  {
+    "id": "jaipur",
+    "name": "Jaipur",
+    "tagline": "The Pink City",
+    "region": "North India",
+    "state": "Rajasthan",
+    "description": "Jaipur, the jewel of Rajasthan, dazzles with its pink-hued architecture, magnificent forts, and royal heritage. From the intricate Hawa Mahal to the grandeur of Amber Fort, every monument tells tales of Rajput valor and artistic brilliance.",
+    "heroImage": "https://images.unsplash.com/photo-1603262110263-fb0112e7cc33?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8amFpcHVyfGVufDB8fDB8fHww",
+    "images": [
+      "https://images.unsplash.com/photo-1599661046289-e31897846e41?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8amFpcHVyfGVufDB8fDB8fHww",
+      "https://images.unsplash.com/photo-1561486008-1011a284acfb?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGphaXB1cnxlbnwwfHwwfHx8MA%3D%3D",
+      "https://images.unsplash.com/photo-1545126178-862cdb469409?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fGphaXB1cnxlbnwwfHwwfHx8MA%3D%3D"
+    ],
+    "rating": 4.8,
+    "bestTime": "October – March",
+    "duration": "3-4 Days",
+    "altitude": "431 m",
+    "vlogUrl": "https://www.youtube.com/embed/8W54F6yQ9iM",
+    "highlights": ["Amber Fort", "Hawa Mahal", "City Palace", "Jantar Mantar", "Nahargarh Fort"],
+    "travelTips": [
+      "Start early to beat the heat at forts",
+      "Hire a local guide at Amber Fort for rich history",
+      "Try authentic Rajasthani thali at LMB or Chokhi Dhani"
+    ],
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Royal Forts",
+        "activities": [
+          "Morning visit to Amber Fort with elephant/jeep ride",
+          "Explore Sheesh Mahal (Mirror Palace) inside",
+          "Stop at Jal Mahal (Water Palace) for photos",
+          "Afternoon at Nahargarh Fort for sunset views",
+          "Evening at Chokhi Dhani village resort for dinner"
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Pink City Heritage",
+        "activities": [
+          "Early morning at Hawa Mahal (Palace of Winds)",
+          "Visit City Palace and its museum",
+          "Explore Jantar Mantar observatory (UNESCO site)",
+          "Shopping at Johari Bazaar for gems and textiles",
+          "Evening light & sound show at Amber Fort"
+        ]
+      },
+      {
+        "day": 3,
+        "title": "Culture & Crafts",
+        "activities": [
+          "Visit Albert Hall Museum",
+          "Explore Birla Mandir temple",
+          "Block printing workshop in Sanganer",
+          "Afternoon at Jaigarh Fort (cannon collection)",
+          "Farewell dinner with Rajasthani folk music"
+        ]
+      }
+    ],
+    "expenses": {
+      "budget": { "accommodation": 600, "food": 400, "transport": 300, "activities": 500, "misc": 200 },
+      "midRange": { "accommodation": 2000, "food": 800, "transport": 600, "activities": 1200, "misc": 400 },
+      "luxury": { "accommodation": 10000, "food": 2500, "transport": 2000, "activities": 3000, "misc": 1000 }
+    }
+  },
+  {
+    "id": "rishikesh",
+    "name": "Rishikesh",
+    "tagline": "Yoga Capital of the World",
+    "region": "North India",
+    "state": "Uttarakhand",
+    "description": "Where the Ganges flows through forested Himalayan foothills, Rishikesh offers a unique blend of spiritual serenity and adrenaline-pumping adventure. From yoga ashrams to white-water rafting, this sacred city rejuvenates both body and soul.",
+    "heroImage": "https://images.unsplash.com/photo-1650341259809-9314b0de9268?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cmlzaGlrZXNofGVufDB8fDB8fHww",
+    "images": [
+      "https://images.unsplash.com/photo-1718383537411-6f9e727ae0bb?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cmlzaGlrZXNofGVufDB8fDB8fHww",
+      "https://images.unsplash.com/photo-1596021688656-35fdc9ed0274?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fHJpc2hpa2VzaCUyMHJhZnRpbmd8ZW58MHx8MHx8fDA%3D",
+      "https://media.istockphoto.com/id/1221092895/photo/beautiful-ram-jhula-bridge-and-ganga-river-taken-in-rishikesh-india.webp?a=1&b=1&s=612x612&w=0&k=20&c=u8Tja76_R667gNOvQFnNvk9aw6jKpnR3nxtkfnOtFPo="
+    ],
+    "rating": 4.6,
+    "bestTime": "September – November, March – May",
+    "duration": "3-4 Days",
+    "altitude": "372 m",
+    "vlogUrl": "https://www.youtube.com/embed/4y8n0Uj_8c8",
+    "highlights": ["Laxman Jhula", "Triveni Ghat", "White-water Rafting", "Beatles Ashram", "Yoga"],
+    "travelTips": [
+      "Attend the Ganga Aarti at Triveni Ghat at sunset",
+      "Book rafting with certified operators only",
+      "Rishikesh is a vegetarian and alcohol-free city"
+    ],
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Spiritual Rishikesh",
+        "activities": [
+          "Arrive and check in near Laxman Jhula",
+          "Walk across Laxman Jhula and Ram Jhula bridges",
+          "Visit Trayambakeshwar Temple",
+          "Afternoon yoga session at an ashram",
+          "Evening Ganga Aarti at Triveni Ghat"
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Adventure Day",
+        "activities": [
+          "Morning white-water rafting (16-26 km options)",
+          "Cliff jumping at designated spots",
+          "Lunch at a riverside café",
+          "Visit Beatles Ashram (Chaurasi Kutia)",
+          "Sunset from Kunjapuri Temple viewpoint"
+        ]
+      },
+      {
+        "day": 3,
+        "title": "Nature & Wellness",
+        "activities": [
+          "Sunrise yoga by the Ganges",
+          "Trek to Neer Garh Waterfall",
+          "Visit Rajaji National Park (seasonal)",
+          "Ayurvedic spa treatment",
+          "Evening meditation and departure"
+        ]
+      }
+    ],
+    "expenses": {
+      "budget": { "accommodation": 500, "food": 350, "transport": 300, "activities": 800, "misc": 200 },
+      "midRange": { "accommodation": 1800, "food": 700, "transport": 500, "activities": 2000, "misc": 400 },
+      "luxury": { "accommodation": 6000, "food": 1500, "transport": 1500, "activities": 4000, "misc": 800 }
+    }
+  },
+  {
+    "id": "varanasi",
+    "name": "Varanasi",
+    "tagline": "The Eternal City",
+    "region": "North India",
+    "state": "Uttar Pradesh",
+    "description": "One of the oldest continuously inhabited cities in the world, Varanasi is the spiritual heart of India. The mesmerizing ghats along the Ganges, ancient temples, and the legendary Ganga Aarti create an experience that transcends time itself.",
+    "heroImage": "https://images.unsplash.com/photo-1561361058-c24cecae35ca?w=1920&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1627894483216-2138af692e32?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8dmFyYW5hc2l8ZW58MHx8MHx8fDA%3D",
+      "https://images.unsplash.com/photo-1613445607898-f46e51645acf?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fHZhcmFuYXNpfGVufDB8fDB8fHww",
+      "https://images.unsplash.com/photo-1634920540678-df0e179c5243?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHZhcmFuYXNpfGVufDB8fDB8fHww"
+    ],
+    "rating": 4.6,
+    "bestTime": "October – March",
+    "duration": "3-4 Days",
+    "altitude": "80 m",
+    "vlogUrl": "https://www.youtube.com/embed/yWjK1v4T0jU",
+    "highlights": ["Dashashwamedh Ghat", "Kashi Vishwanath", "Boat Ride", "Sarnath", "Ganga Aarti"],
+    "travelTips": [
+      "Take a dawn boat ride for the most magical experience",
+      "Hire a local guide to navigate the narrow lanes",
+      "Try the famous Banarasi paan and kachori"
+    ],
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "The Sacred Ghats",
+        "activities": [
+          "Arrive and check in near Assi Ghat",
+          "Walk along the 84 ghats of Varanasi",
+          "Visit Dashashwamedh Ghat",
+          "Evening Ganga Aarti ceremony (must-see)",
+          "Dinner with a view at a ghat-side restaurant"
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Temples & Heritage",
+        "activities": [
+          "Pre-dawn boat ride on the Ganges",
+          "Visit Kashi Vishwanath Temple",
+          "Explore Banaras Hindu University campus",
+          "Afternoon at Ramnagar Fort across the river",
+          "Evening walk through the old city lanes"
+        ]
+      },
+      {
+        "day": 3,
+        "title": "Sarnath & Silk",
+        "activities": [
+          "Day trip to Sarnath (where Buddha preached)",
+          "Visit Dhamek Stupa and Sarnath Museum",
+          "Afternoon Banarasi silk sari shopping",
+          "Visit Tulsi Manas Temple",
+          "Farewell lassi at Blue Lassi Shop"
+        ]
+      }
+    ],
+    "expenses": {
+      "budget": { "accommodation": 500, "food": 300, "transport": 250, "activities": 400, "misc": 150 },
+      "midRange": { "accommodation": 1500, "food": 700, "transport": 500, "activities": 1000, "misc": 300 },
+      "luxury": { "accommodation": 5000, "food": 1500, "transport": 1500, "activities": 2500, "misc": 700 }
+    }
+  },
+  {
+    "id": "goa",
+    "name": "Goa",
+    "tagline": "Beach Paradise of India",
+    "region": "West India",
+    "state": "Goa",
+    "description": "India's smallest state packs the biggest punch with its sun-kissed beaches, Portuguese heritage, vibrant nightlife, and laid-back vibe. From the lively shores of North Goa to the serene coves of South Goa, there's a beach for every mood.",
+    "heroImage": "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=1920&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1587922546307-776227941871?w=800&q=80",
+      "https://images.unsplash.com/photo-1614082242765-7c98ca0f3df3?w=800&q=80",
+      "https://images.unsplash.com/photo-1528127269322-539801943592?w=800&q=80"
+    ],
+    "rating": 4.7,
+    "bestTime": "November – February",
+    "duration": "4-5 Days",
+    "altitude": "0 m",
+    "vlogUrl": "https://www.youtube.com/embed/coE3XmSuhE0",
+    "highlights": ["Baga Beach", "Fort Aguada", "Basilica of Bom Jesus", "Dudhsagar Falls", "Nightlife"],
+    "travelTips": [
+      "Rent a scooter for the most authentic Goa experience",
+      "South Goa is quieter, North Goa is more lively",
+      "Try Goan fish curry, vindaloo, and bebinca"
+    ],
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "North Goa Beaches",
+        "activities": [
+          "Arrive and settle into beach hotel/hostel",
+          "Hit Baga Beach for water sports",
+          "Lunch at a beach shack",
+          "Visit Fort Aguada for sunset views",
+          "Night out at Tito's Lane, Baga"
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Heritage & Culture",
+        "activities": [
+          "Visit Old Goa – Basilica of Bom Jesus (UNESCO)",
+          "Explore Se Cathedral and Church of St. Francis",
+          "Lunch of authentic Goan cuisine in Panjim",
+          "Walk through Latin Quarter of Fontainhas",
+          "Evening cruise on Mandovi River"
+        ]
+      },
+      {
+        "day": 3,
+        "title": "South Goa Serenity",
+        "activities": [
+          "Drive to Palolem Beach (South Goa)",
+          "Kayaking and dolphin spotting",
+          "Visit Cabo de Rama Fort",
+          "Relax at Cola Beach's hidden lagoon",
+          "Seafood dinner at a beach candlelit restaurant"
+        ]
+      },
+      {
+        "day": 4,
+        "title": "Adventure & Waterfalls",
+        "activities": [
+          "Full-day trip to Dudhsagar Falls",
+          "Jeep ride through Bhagwan Mahaveer Sanctuary",
+          "Swim in the waterfall pools",
+          "Spice plantation visit on the way back",
+          "Farewell beach party"
+        ]
+      }
+    ],
+    "expenses": {
+      "budget": { "accommodation": 600, "food": 500, "transport": 400, "activities": 500, "misc": 300 },
+      "midRange": { "accommodation": 2500, "food": 1200, "transport": 800, "activities": 1500, "misc": 500 },
+      "luxury": { "accommodation": 8000, "food": 3000, "transport": 2000, "activities": 3500, "misc": 1000 }
+    }
+  },
+  {
+    "id": "meghalaya",
+    "name": "Meghalaya",
+    "tagline": "Abode of Clouds",
+    "region": "Northeast India",
+    "state": "Meghalaya",
+    "description": "Meghalaya, the 'Abode of Clouds,' is a mystical wonderland of living root bridges, crystal-clear rivers, dramatic waterfalls, and the wettest place on Earth. This untouched paradise in Northeast India offers adventures found nowhere else.",
+    "heroImage": "https://images.unsplash.com/photo-1594514113865-d1deac339435?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWVnaGFseWF8ZW58MHx8MHx8fDA%3D",
+    "images": [
+      "https://images.unsplash.com/photo-1743786342649-aeb04b361e15?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NzB8fG1lZ2hhbHlhfGVufDB8fDB8fHww",
+      "https://images.unsplash.com/photo-1433838552652-f9a46b332c40?w=800&q=80",
+      "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&q=80"
+    ],
+    "rating": 4.9,
+    "bestTime": "October – May",
+    "duration": "5-6 Days",
+    "altitude": "1,496 m",
+    "vlogUrl": "https://www.youtube.com/embed/1vRzT5Vj_7s",
+    "highlights": ["Living Root Bridges", "Dawki River", "Nohkalikai Falls", "Mawlynnong Village", "Caves"],
+    "travelTips": [
+      "Carry rain gear – Meghalaya gets heavy rainfall",
+      "The root bridge trek requires moderate fitness",
+      "Respect Khasi culture and local customs"
+    ],
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Shillong – Capital City",
+        "activities": [
+          "Arrive at Shillong via Guwahati (IXS airport)",
+          "Visit Ward's Lake and Lady Hydari Park",
+          "Explore Police Bazaar for local food",
+          "Visit Don Bosco Museum (NE India culture)",
+          "Evening at Café Shillong with live music"
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Cherrapunji Waterfalls",
+        "activities": [
+          "Drive to Cherrapunji (Sohra) – 2 hours",
+          "Visit Nohkalikai Falls (tallest plunge waterfall in India)",
+          "Explore Seven Sisters Falls viewpoint",
+          "Visit Mawsmai Cave (limestone formations)",
+          "Stay overnight in Cherrapunji"
+        ]
+      },
+      {
+        "day": 3,
+        "title": "Living Root Bridges",
+        "activities": [
+          "Trek to Double Decker Living Root Bridge (Nongriat)",
+          "3,500 steps descent through rainforest",
+          "Swim in natural rock pools",
+          "Marvel at the 180-year-old root bridges",
+          "Trek back and rest"
+        ]
+      },
+      {
+        "day": 4,
+        "title": "Dawki & Bangladesh Border",
+        "activities": [
+          "Drive to Dawki – India-Bangladesh border",
+          "Boating on crystal-clear Umngot River",
+          "Visit Mawlynnong – Asia's cleanest village",
+          "Sky Walk viewpoint over Bangladesh plains",
+          "Return to Shillong"
+        ]
+      },
+      {
+        "day": 5,
+        "title": "Jaintia Hills",
+        "activities": [
+          "Visit Krang Suri Waterfall (turquoise pools)",
+          "Explore Jaintia Hills landscape",
+          "Local Khasi cuisine lunch",
+          "Shopping for Khasi handicrafts",
+          "Departure from Shillong/Guwahati"
+        ]
+      }
+    ],
+    "expenses": {
+      "budget": { "accommodation": 600, "food": 400, "transport": 500, "activities": 300, "misc": 200 },
+      "midRange": { "accommodation": 2000, "food": 800, "transport": 1000, "activities": 800, "misc": 400 },
+      "luxury": { "accommodation": 5000, "food": 1500, "transport": 2000, "activities": 1500, "misc": 700 }
+    }
+  },
+  {
+    "id": "ladakh",
+    "name": "Leh-Ladakh",
+    "tagline": "Land of High Passes",
+    "region": "North India",
+    "state": "Ladakh",
+    "description": "A surreal high-altitude desert where turquoise lakes meet barren mountains, ancient monasteries cling to cliffsides, and the world's highest motorable roads test your limits. Ladakh is the ultimate frontier for adventurers and seekers of raw, untamed beauty.",
+    "heroImage": "https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bGFkYWtofGVufDB8fDB8fHww",
+    "images": [
+      "https://images.unsplash.com/photo-1605649487212-47bdab064df7?w=800&q=80",
+      "https://images.unsplash.com/photo-1569388330292-79cc1ec67270?w=800&q=80",
+      "https://images.unsplash.com/photo-1619837374214-f5b9eb80876d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bGFkYWtofGVufDB8fDB8fHww"
+    ],
+    "rating": 4.9,
+    "bestTime": "June – September",
+    "duration": "6-7 Days",
+    "altitude": "3,524 m",
+    "vlogUrl": "https://www.youtube.com/embed/HShCgXvjE7o",
+    "highlights": ["Pangong Lake", "Nubra Valley", "Khardung La", "Monasteries", "Magnetic Hill"],
+    "travelTips": [
+      "Acclimatize for 1-2 days in Leh before traveling",
+      "Get Inner Line Permits for Pangong and Nubra",
+      "Carry altitude sickness medication (Diamox)"
+    ],
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Arrival & Acclimatization",
+        "activities": [
+          "Fly into Leh Kushok Bakula Airport",
+          "REST – acclimatize to high altitude (3,500m)",
+          "Light walk around Leh Market",
+          "Visit Shanti Stupa for sunset views",
+          "Early dinner and rest"
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Leh Exploration",
+        "activities": [
+          "Visit Leh Palace (17th century royal palace)",
+          "Explore Namgyal Tsemo Monastery",
+          "Drive to Magnetic Hill and Gurudwara Pathar Sahib",
+          "Visit Sangam – confluence of Indus and Zanskar",
+          "Evening at Leh Market for souvenirs"
+        ]
+      },
+      {
+        "day": 3,
+        "title": "Nubra Valley",
+        "activities": [
+          "Cross Khardung La Pass (5,359m – world's highest)",
+          "Drive down to Nubra Valley",
+          "Double-humped camel ride at Hunder Sand Dunes",
+          "Visit Diskit Monastery and giant Buddha statue",
+          "Overnight camp under the stars in Nubra"
+        ]
+      },
+      {
+        "day": 4,
+        "title": "Pangong Lake",
+        "activities": [
+          "Drive from Nubra to Pangong via Shyok route",
+          "Arrive at Pangong Tso – the famous blue lake",
+          "Photography at the ever-changing blue waters",
+          "Visit the 3 Idiots filming point",
+          "Overnight in lakeside camps"
+        ]
+      },
+      {
+        "day": 5,
+        "title": "Monasteries & Culture",
+        "activities": [
+          "Return to Leh from Pangong via Chang La",
+          "Visit Hemis Monastery (largest in Ladakh)",
+          "Explore Thiksey Monastery (mini Potala Palace)",
+          "Visit Shey Palace ruins",
+          "Farewell dinner with Ladakhi cuisine"
+        ]
+      }
+    ],
+    "expenses": {
+      "budget": { "accommodation": 800, "food": 500, "transport": 1000, "activities": 500, "misc": 300 },
+      "midRange": { "accommodation": 3000, "food": 1200, "transport": 2500, "activities": 1500, "misc": 600 },
+      "luxury": { "accommodation": 10000, "food": 2500, "transport": 5000, "activities": 3000, "misc": 1500 }
+    }
+  },
+  {
+    "id": "kedarnath",
+    "name": "Kedarnath",
+    "tagline": "The Sacred Abode of Shiva",
+    "region": "North India",
+    "state": "Uttarakhand",
+    "description": "Perched amidst the majestic snow-clad peaks of the Garhwal Himalayas near the Mandakini River, Kedarnath is one of the most sacred pilgrimage sites in India. Dominated by the ancient 8th-century stone temple, it offers an incomparable spiritual trekking experience.",
+    "heroImage": "https://images.unsplash.com/photo-1612438214708-f428a707dd4e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8a2VkYXJuYXRofGVufDB8fDB8fHww",
+    "images": [
+      "https://images.unsplash.com/photo-1606722581293-628fa217a6f7?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGtlZGFybmF0aHxlbnwwfHwwfHx8MA%3D%3D",
+      "https://images.unsplash.com/photo-1699042921538-6d03a8df9631?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8a2VkYXJuYXRofGVufDB8fDB8fHww",
+      "https://images.unsplash.com/photo-1649147313351-c86537fda0eb?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8a2VkYXJuYXRofGVufDB8fDB8fHww"
+    ],
+    "rating": 4.9,
+    "bestTime": "May – June, September – October",
+    "duration": "3-4 Days",
+    "altitude": "3,583 m",
+    "vlogUrl": "https://www.youtube.com/embed/wzZgL-qgKsw",
+    "highlights": ["Kedarnath Temple", "Bhairav Temple", "Gauri Kund", "Vasuki Tal", "Mandakini River"],
+    "travelTips": [
+      "Physical fitness is essential for the 16 km trek from Gauri Kund",
+      "Get a mandatory medical check-up at Gauri Kund if needed",
+      "Carry heavy woolens and a good raincoat"
+    ],
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Haridwar/Rishikesh to Guptkashi",
+        "activities": [
+          "Drive from Rishikesh/Haridwar to Guptkashi or Sonprayag (200 km, 7-8 hours)",
+          "Enjoy panoramic views of Ganga and Alaknanda rivers on the way",
+          "Check in at hotel/camp in Guptkashi",
+          "Prepare trek gear and rest for the early morning start"
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Trek Gauri Kund to Kedarnath",
+        "activities": [
+          "Drive to Sonprayag, then take local shuttle to Gauri Kund",
+          "Begin the legendary 16 km steep trek to Kedarnath Temple",
+          "Marvel at mountain waterfalls and snow summits along the trek path",
+          "Arrive at Kedarnath base camp in the afternoon",
+          "Attend the magical evening Shiva Aarti inside the grand stone temple"
+        ]
+      },
+      {
+        "day": 3,
+        "title": "Bhairav Temple & Descent",
+        "activities": [
+          "Wake up early (5 AM) for morning Darshan inside the sanctum sanctorum",
+          "Trek 1 km further up to Bhairav Nath Temple for a breathtaking view of the valley",
+          "Begin the 16 km return trek down to Gauri Kund",
+          "Take shuttle back to Sonprayag/Guptkashi for overnight stay"
+        ]
+      }
+    ],
+    "expenses": {
+      "budget": { "accommodation": 600, "food": 400, "transport": 500, "activities": 300, "misc": 200 },
+      "midRange": { "accommodation": 2000, "food": 900, "transport": 1000, "activities": 1000, "misc": 400 },
+      "luxury": { "accommodation": 6000, "food": 2000, "transport": 4000, "activities": 2500, "misc": 800 }
+    }
+  },
+  {
+    "id": "madhyamaheshwar",
+    "name": "Madhya Maheshwar",
+    "tagline": "The Mystical Fourth Kedar",
+    "region": "North India",
+    "state": "Uttarakhand",
+    "description": "Madhya Maheshwar (Madmaheshwar) is a picturesque mountain hamlet set in a green meadow beneath the snow-crowned Chaukhamba peaks. As the fourth temple of the famous Panch Kedar pilgrimage, it remains blissfully untouched, peaceful, and stunningly scenic.",
+    "heroImage": "https://media.istockphoto.com/id/2271446221/photo/a-man-walks-along-a-stone-pathway-with-green-railings-in-a-mountainous-landscape-near.webp?a=1&b=1&s=612x612&w=0&k=20&c=9wnTlWRHtLW5wxkcSsn-Vt-djAx4MDB2JNnMUf9qHFU=",
+    "images": [
+      "https://images.unsplash.com/photo-1516912481808-3406841bd33c?w=800&q=80",
+      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
+      "https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=800&q=80"
+    ],
+    "rating": 4.8,
+    "bestTime": "May – October",
+    "duration": "3-4 Days",
+    "altitude": "3,497 m",
+    "vlogUrl": "https://www.youtube.com/embed/2_XzZ1H1d4c",
+    "highlights": ["Madmaheshwar Temple", "Budha Madmaheshwar Trek", "Chaukhamba Peak Views", "Ukhimath"],
+    "travelTips": [
+      "Trek starts from Ransi village — carry cash since network is limited",
+      "Budha Madmaheshwar (2 km above temple) offers the best sunrise over Chaukhamba",
+      "Homestays are run by warm local villagers — enjoy simple Pahadi hospitality"
+    ],
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Drive to Ukhimath / Ransi",
+        "activities": [
+          "Drive from Rishikesh to Ukhimath / Ransi village (190 km, 7 hours)",
+          "Visit Omkareshwar Temple in Ukhimath (winter seat of Kedarnath)",
+          "Continue to Ransi village and check into local homestay",
+          "Enjoy organic local dinner and prepare for trekking"
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Trek Ransi to Madmaheshwar",
+        "activities": [
+          "Start the scenic 16 km forest trek along the Madmaheshwar Ganga",
+          "Pass through dense bamboo and rhododendron groves and villages like Gaundhar",
+          "After a steep final climb, arrive at the beautiful meadows of Madmaheshwar",
+          "Check into temple guest rooms or local huts",
+          "Attend evening prayers at the historic stone temple"
+        ]
+      },
+      {
+        "day": 3,
+        "title": "Budha Madmaheshwar & Descent",
+        "activities": [
+          "Wake up at 4 AM to climb 2 km up to Budha Madmaheshwar ridge",
+          "Witness the spectacular gold reflection of sunrise on Chaukhamba Peaks",
+          "Descend to temple for breakfast",
+          "Trek back 16 km down to Ransi village",
+          "Drive back to Ukhimath for rest and overnight stay"
+        ]
+      }
+    ],
+    "expenses": {
+      "budget": { "accommodation": 500, "food": 300, "transport": 400, "activities": 200, "misc": 150 },
+      "midRange": { "accommodation": 1500, "food": 700, "transport": 800, "activities": 500, "misc": 300 },
+      "luxury": { "accommodation": 4000, "food": 1500, "transport": 2500, "activities": 1200, "misc": 600 }
+    }
+  },
+  {
+    "id": "dharamshala",
+    "name": "Dharamshala",
+    "tagline": "Home of the Dalai Lama",
+    "region": "North India",
+    "state": "Himachal Pradesh",
+    "description": "Fringed by gorgeous pine and deodar forests and set against the towering, snow-covered Dhauladhar mountain range, Dharamshala is a vibrant multicultural destination. McLeod Ganj serves as the headquarters of the Tibetan Government in Exile.",
+    "heroImage": "https://images.unsplash.com/photo-1698930299968-5cc0e664fdd0?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bWNsZW9kZ2FuanxlbnwwfHwwfHx8MA%3D%3D",
+    "images": [
+      "https://images.unsplash.com/photo-1649953904821-f522e74b588e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fG1jbGVvZGdhbmp8ZW58MHx8MHx8fDA%3D",
+      "https://images.unsplash.com/photo-1626621338418-713655538d99?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8dHJpdW5kfGVufDB8fDB8fHww",
+      "https://images.unsplash.com/photo-1779011344779-38aa62d171ff?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aHBjYSUyMHN0YWRpdW18ZW58MHx8MHx8fDA%3D"
+    ],
+    "rating": 4.7,
+    "bestTime": "March – June, September – December",
+    "duration": "3-4 Days",
+    "altitude": "1,457 m",
+    "vlogUrl": "https://www.youtube.com/embed/xS6Y1b8_K8g",
+    "highlights": ["McLeod Ganj", "Dalai Lama Temple", "Triund Trek", "Bhagsunag Falls", "HPCA Stadium"],
+    "travelTips": [
+      "Stay in McLeod Ganj or Dharamkot for easy café and temple access",
+      "Triund trek is easy-moderate but requires pre-booking for overnight camps",
+      "Try hot momos, thukpa, and butter tea at Tibetan stalls"
+    ],
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Tibetan Culture & McLeod Ganj",
+        "activities": [
+          "Arrive in Dharamshala (Kangra airport or Volvo bus)",
+          "Check in at hotel in McLeod Ganj",
+          "Visit Tsuglagkhang Complex (Dalai Lama Temple)",
+          "Explore the Tibetan Museum and spin the prayer wheels",
+          "Evening stroll around the McLeod Ganj markets and cafés"
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Triund Trek Adventure",
+        "activities": [
+          "Start early from McLeod Ganj / Gallu Devi Temple",
+          "Begin the scenic 9 km pine-forest trek to Triund",
+          "Pass Magic View café and enjoy views of Kangra Valley",
+          "Arrive at Triund Ridge (2,875m) directly beneath the Dhauladhar wall",
+          "Overnight camping, dinner, and stargazing under the peaks"
+        ]
+      },
+      {
+        "day": 3,
+        "title": "Bhagsunag & HPCA Stadium",
+        "activities": [
+          "Witness the sunrise over the peaks, then trek down to McLeod Ganj",
+          "Visit Bhagsunag Temple and the Bhagsu waterfall",
+          "Relax at Shiva Café in Bhagsu",
+          "Drive down to Lower Dharamshala to visit the stunning HPCA Cricket Stadium",
+          "Explore the War Memorial or Kotwali Bazaar"
+        ]
+      }
+    ],
+    "expenses": {
+      "budget": { "accommodation": 600, "food": 400, "transport": 300, "activities": 400, "misc": 200 },
+      "midRange": { "accommodation": 2200, "food": 900, "transport": 600, "activities": 1200, "misc": 400 },
+      "luxury": { "accommodation": 8000, "food": 2500, "transport": 1800, "activities": 3000, "misc": 1000 }
+    }
+  },
+  {
+    "id": "ujjain",
+    "name": "Ujjain",
+    "tagline": "The Eternal City of Mahakal",
+    "region": "Central India",
+    "state": "Madhya Pradesh",
+    "description": "Ujjain, one of the oldest cities in India, sits majestically on the banks of the sacred Shipra River. Renowned for the legendary Mahakaleshwar temple, a self-manifested Jyotirlinga, the city vibrates with intense spiritual energy, colorful river aartis, and rich historic heritage.",
+    "heroImage": "https://images.unsplash.com/photo-1699582614142-183ae376bb5f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8dWpqYWlufGVufDB8fDB8fHww",
+    "images": [
+      "https://images.unsplash.com/photo-1658730458768-8b8cc0c00955?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bWFoYWthbGVzaHdhciUyMGp5b3RpcmxpbmdhfGVufDB8fDB8fHww",
+      "https://images.unsplash.com/photo-1561361058-c24cecae35ca?w=800&q=80",
+      "https://images.unsplash.com/photo-1638814175187-bef04bac8f6e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8b21rYXJlc2h3YXJ8ZW58MHx8MHx8fDA%3D"
+    ],
+    "rating": 4.8,
+    "bestTime": "October – March",
+    "duration": "2-3 Days",
+    "altitude": "491 m",
+    "vlogUrl": "https://www.youtube.com/embed/7X-vV96a-zY",
+    "highlights": ["Mahakaleshwar Temple", "Ram Ghat Shipra Aarti", "Harsiddhi Temple", "Kal Bhairav Temple", "Jantar Mantar"],
+    "travelTips": [
+      "Book your Bhasma Aarti online weeks in advance at Mahakaleshwar Temple",
+      "Take a holy dip and attend the evening Shipra River Aarti at Ram Ghat",
+      "Kal Bhairav Temple accepts traditional liquor offerings as Prasad"
+    ],
+    "itinerary": [
+      {
+        "day": 1,
+        "title": "Spiritual Awakening",
+        "activities": [
+          "Arrive in Ujjain via flight to Indore (IDR) or train",
+          "Check into a heritage hotel or central dharmashala",
+          "Visit Harsiddhi Temple (one of the 51 Shaktipeethas)",
+          "Witness the grand evening Shipra River Aarti at Ram Ghat",
+          "Explore local markets for ethnic Malwa crafts"
+        ]
+      },
+      {
+        "day": 2,
+        "title": "Mahakal Temple & Antiquities",
+        "activities": [
+          "Early morning Bhasma Aarti (optional/pre-booked) at Mahakaleshwar Temple",
+          "Visit the unique Kal Bhairav Temple",
+          "Explore the ancient observatory Vedh Shala (Jantar Mantar)",
+          "Visit Sandipani Ashram (where Lord Krishna studied)",
+          "Savor local street foods like Poha-Jalebi and Dal Bafla"
+        ]
+      }
+    ],
+    "expenses": {
+      "budget": { "accommodation": 500, "food": 300, "transport": 250, "activities": 300, "misc": 150 },
+      "midRange": { "accommodation": 1800, "food": 700, "transport": 500, "activities": 700, "misc": 300 },
+      "luxury": { "accommodation": 5000, "food": 1500, "transport": 1500, "activities": 1500, "misc": 700 }
+    }
+  }
+]
