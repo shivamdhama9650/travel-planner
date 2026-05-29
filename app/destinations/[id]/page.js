@@ -107,6 +107,15 @@ export default async function DestinationDetailPage({ params }) {
                 </div>
               )}
             </div>
+            
+            <div style={{ marginTop: "var(--space-lg)", display: "flex", gap: "var(--space-md)", flexWrap: "wrap" }}>
+              <Link href={`/checkout?destination=${d.id}`} className="btn btn-accent btn-lg" style={{ fontWeight: "700" }}>
+                ⚡ Book Package Now
+              </Link>
+              <Link href="#expense-planner-section" className="btn btn-outline btn-lg">
+                🧮 Budget Calculator
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -176,18 +185,21 @@ export default async function DestinationDetailPage({ params }) {
 
               {/* Quick Navigation / Action */}
               <div className="detail-card" style={{
-                background: "linear-gradient(135deg, hsla(210, 100%, 50%, 0.08), hsla(35, 100%, 50%, 0.08))",
-                border: "1px solid var(--primary-light)",
+                background: "linear-gradient(135deg, hsla(35, 100%, 50%, 0.1), hsla(210, 100%, 50%, 0.1))",
+                border: "1px solid var(--accent)",
                 textAlign: "center"
               }}>
-                <h3 style={{ fontSize: "var(--text-lg)", marginBottom: "var(--space-sm)" }}>
-                  Need a custom plan?
+                <h3 style={{ fontSize: "var(--text-lg)", marginBottom: "var(--space-xs)" }}>
+                  Ready to book this trip?
                 </h3>
                 <p style={{ fontSize: "var(--text-sm)", color: "var(--text-secondary)", marginBottom: "var(--space-md)" }}>
-                  Use our interactive budget tool to tailor expenses for your travel party and style!
+                  Reserve your dates, apply coupons, and secure your spot instantly.
                 </p>
-                <Link href="#expense-planner-section" className="btn btn-primary" style={{ width: "100%", justifyContent: "center" }}>
-                  🧮 Go to Calculator
+                <Link href={`/checkout?destination=${d.id}`} className="btn btn-accent" style={{ width: "100%", justifyContent: "center", marginBottom: "var(--space-sm)", fontWeight: "700" }}>
+                  ⚡ Book Package Now
+                </Link>
+                <Link href="#expense-planner-section" className="btn btn-outline" style={{ width: "100%", justifyContent: "center" }}>
+                  🧮 Customize Budget
                 </Link>
               </div>
 
