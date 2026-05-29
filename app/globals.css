@@ -842,6 +842,39 @@ ul, ol {
   gap: var(--space-sm);
 }
 
+.razorpay-book-wrap {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.payment-status {
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.payment-status-success {
+  color: var(--success, #22c55e);
+}
+
+.payment-status-error {
+  color: var(--danger);
+}
+
+.payment-success-banner {
+  margin: var(--space-md) auto 0;
+  max-width: var(--max-width);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-lg);
+  background: hsla(142, 70%, 40%, 0.15);
+  border: 1px solid hsla(142, 70%, 45%, 0.4);
+  color: hsl(142, 60%, 75%);
+  text-align: center;
+  font-weight: 600;
+}
+
 .package-book-btn {
   margin-top: var(--space-md);
   width: 100%;

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { normalizeImageUrl } from "../lib/images";
+import RazorpayBookButton from "./RazorpayBookButton";
 
 export default function DestinationCard({ destination, index = 0 }) {
   const d = destination;
@@ -43,9 +44,9 @@ export default function DestinationCard({ destination, index = 0 }) {
           </div>
 
           <div className="dest-card-price">
-            <span className="dest-card-price-label">Starting from</span>
+            <span className="dest-card-price-label">Package from</span>
             <span className="dest-card-price-value">
-              ₹{d.budgetPerDay?.toLocaleString("en-IN") || "2,500"}/day
+              ₹{(d.packagePrice || d.budgetPerDay * 3 || 7500).toLocaleString("en-IN")}
             </span>
           </div>
         </div>
@@ -60,13 +61,14 @@ export default function DestinationCard({ destination, index = 0 }) {
         >
           View Details
         </Link>
-        <Link
-          href="/book"
+        <RazorpayBookButton
+          destinationId={d.id}
+          destinationName={d.name}
+          amountInRupees={d.packagePrice || (d.budgetPerDay || 2500) * 3}
           className="btn btn-primary dest-card-book-btn"
-          id={`book-btn-${d.id}`}
         >
-          🎒 Book Now
-        </Link>
+          🎒 Book — ₹{(d.packagePrice || (d.budgetPerDay || 2500) * 3).toLocaleString("en-IN")}
+        </RazorpayBookButton>
       </div>
     </div>
   );

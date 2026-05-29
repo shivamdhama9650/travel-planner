@@ -1,6 +1,7 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import OurPackages from "../components/OurPackages";
+import PaymentSuccessBanner from "../components/PaymentSuccessBanner";
 import Link from "next/link";
 
 export const metadata = {
@@ -13,6 +14,9 @@ export default function BookPage() {
   return (
     <>
       <Navbar />
+      <div className="container">
+        <PaymentSuccessBanner />
+      </div>
 
       {/* ── HERO ─────────────────────────────── */}
       <section
@@ -95,7 +99,7 @@ export default function BookPage() {
             {[
               { step: "01", icon: "🗺️", title: "Pick a Package", desc: "Browse our curated destinations above and select the one that inspires you." },
               { step: "02", icon: "🧮", title: "Estimate Budget", desc: "Use our smart calculator to plan expenses for your group size and travel style." },
-              { step: "03", icon: "💸", title: "Split & Go", desc: "Use Split-Yatra to divide costs among friends and settle up before you leave." },
+              { step: "03", icon: "💳", title: "Pay Securely", desc: "Click Book Now on any package and pay online with Razorpay (UPI, cards, netbanking)." },
             ].map((item) => (
               <div key={item.step} className="feature-card" style={{ textAlign: "center" }}>
                 <div style={{ fontSize: "2.5rem", marginBottom: "var(--space-sm)" }}>{item.icon}</div>

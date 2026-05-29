@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { getStoredAuth } from "../lib/auth";
+import RazorpayBookButton from "./RazorpayBookButton";
 import { normalizeImageUrl } from "../lib/images";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
@@ -159,9 +159,14 @@ export default function OurPackages() {
                     Starting at ₹{Number(pkg.packagePrice).toLocaleString("en-IN")}
                   </p>
                 )}
-                <Link href={`/destinations/${pkg.id}`} className="btn btn-accent package-book-btn">
-                  Book Now
-                </Link>
+                <RazorpayBookButton
+                  destinationId={pkg.id}
+                  destinationName={pkg.name}
+                  amountInRupees={pkg.packagePrice}
+                  className="btn btn-accent package-book-btn"
+                >
+                  Book Now — ₹{Number(pkg.packagePrice).toLocaleString("en-IN")}
+                </RazorpayBookButton>
               </article>
             ))}
           </div>

@@ -3,7 +3,9 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
+const crypto = require("crypto");
 const mongoose = require("mongoose");
+const Razorpay = require("razorpay");
 const { createRemoteJWKSet, jwtVerify } = require("jose");
 
 const app = express();
@@ -23,6 +25,13 @@ const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || "")
 const SUPABASE_JWKS = SUPABASE_URL
   ? createRemoteJWKSet(new URL(`${SUPABASE_URL}/auth/v1/.well-known/jwks.json`))
   : null;
+
+const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID || "";
+const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET || "";
+const razorpay =
+  RAZORPAY_KEY_ID && RAZORPAY_KEY_SECRET
+    ? new Razorpay({ key_id: RAZORPAY_KEY_ID, key_secret: RAZORPAY_KEY_SECRET })
+    : null;
 
 const dataPath = path.join(__dirname, "data", "destinations.json");
 const packagesPath = path.join(__dirname, "data", "packages.json");
@@ -394,6 +403,91 @@ const updatePackagePrice = async (destinationId, price) => {
 
 // ─── ROUTES ───────────────────────────────────────────────
 
+// POST /api/create-order — Razorpay order (amount in paise)
+app.post("/api/create-order", async (req, res) => {
+  const { amount, currency = "INR", receipt, notes } = req.body || {};
+  const amountPaise = Math.round(Number(amount));
+
+  if (!Number.isFinite(amountPaise) || amountPaise < 100) {
+    return res.status(400).json({
+      success: false,
+      message: "Amount must be at least 100 paise (₹1)",
+    });
+  }
+
+  if (!razorpay) {
+    return res.status(500).json({
+      success: false,
+      message: "Razorpay is not configured. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in backend .env",
+    });
+  }
+
+  try {
+    const order = await razorpay.orders.create({
+      amount: amountPaise,
+      currency: String(currency).toUpperCase(),
+      receipt: receipt || `receipt_${Date.now()}`,
+      notes: notes && typeof notes === "object" ? notes : {},
+    });
+
+    return res.json({
+      success: true,
+      data: {
+        order_id: order.id,
+        amount: order.amount,
+        currency: order.currency,
+      },
+    });
+  } catch (err) {
+    const statusCode = err?.statusCode === 401 ? 401 : 500;
+    return res.status(statusCode).json({
+      success: false,
+      message: err?.error?.description || err.message || "Failed to create Razorpay order",
+    });
+  }
+});
+
+// POST /api/verify-payment — HMAC signature verification
+app.post("/api/verify-payment", async (req, res) => {
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body || {};
+
+  if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+    return res.status(400).json({
+      success: false,
+      message: "Missing razorpay_order_id, razorpay_payment_id, or razorpay_signature",
+    });
+  }
+
+  if (!RAZORPAY_KEY_SECRET) {
+    return res.status(500).json({
+      success: false,
+      message: "Razorpay is not configured on the server",
+    });
+  }
+
+  const payload = `${razorpay_order_id}|${razorpay_payment_id}`;
+  const expectedSignature = crypto
+    .createHmac("sha256", RAZORPAY_KEY_SECRET)
+    .update(payload)
+    .digest("hex");
+
+  if (expectedSignature !== razorpay_signature) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid payment signature",
+    });
+  }
+
+  return res.json({
+    success: true,
+    message: "Payment verified successfully",
+    data: {
+      order_id: razorpay_order_id,
+      payment_id: razorpay_payment_id,
+    },
+  });
+});
+
 app.post("/api/auth/register", async (_req, res) =>
   res.status(410).json({
     success: false,
@@ -666,7 +760,10 @@ const startServer = async () => {
     console.log("  GET  /api/destinations/:id/itinerary");
     console.log("  POST /api/expenses/calculate");
     console.log("  GET  /api/regions");
-    console.log("  GET  /api/health\n");
+    console.log("  POST /api/create-order");
+    console.log("  POST /api/verify-payment");
+    console.log("  GET  /api/health");
+    console.log(`  💳 Razorpay: ${razorpay ? "configured" : "NOT configured"}\n`);
   });
 
   httpServer.on("error", (err) => {
