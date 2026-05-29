@@ -1,4 +1,4 @@
-import { supabase } from "./supabase";
+import { createClient } from "./supabase/client";
 
 /** OAuth return URL — must match Supabase → Authentication → Redirect URLs */
 export function getAuthRedirectUrl() {
@@ -10,6 +10,7 @@ export function getAuthRedirectUrl() {
 }
 
 export async function signInWithGoogle() {
+  const supabase = createClient();
   if (!supabase) {
     throw new Error("Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.");
   }
@@ -37,6 +38,10 @@ export async function signInWithGoogle() {
 
 export function formatAuthError(err) {
   const message = err?.message || String(err || "Something went wrong");
+
+  if (/pkce|code verifier/i.test(message)) {
+    return "Sign-in session expired. Please try Continue with Google again from the same browser tab.";
+  }
 
   if (/rate limit|too many requests|email.*limit|2 emails|per hour/i.test(message)) {
     return "Email limit reached (Supabase free tier allows about 2 emails per hour). Use Continue with Google instead, or wait and try again.";

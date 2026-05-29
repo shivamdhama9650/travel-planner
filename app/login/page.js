@@ -7,7 +7,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { completeSignIn, setStoredAuth } from "../lib/auth";
 import { formatAuthError, signInWithGoogle } from "../lib/auth-oauth";
-import { supabase } from "../lib/supabase";
+import { createClient } from "../lib/supabase/client";
 
 function LoginForm() {
   const searchParams = useSearchParams();
@@ -41,6 +41,7 @@ function LoginForm() {
     setLoading(true);
 
     try {
+      const supabase = createClient();
       if (!supabase) {
         throw new Error("Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.");
       }

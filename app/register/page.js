@@ -6,7 +6,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { completeSignIn, setStoredAuth } from "../lib/auth";
 import { formatAuthError, signInWithGoogle } from "../lib/auth-oauth";
-import { supabase } from "../lib/supabase";
+import { createClient } from "../lib/supabase/client";
 
 export default function RegisterPage() {
   const [fullName, setFullName] = useState("");
@@ -33,6 +33,7 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
+      const supabase = createClient();
       if (!supabase) {
         throw new Error("Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.");
       }

@@ -1,14 +1,2 @@
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-export const supabase =
-  supabaseUrl && supabaseAnonKey
-    ? createClient(supabaseUrl, supabaseAnonKey, {
-        auth: {
-          flowType: "pkce",
-          detectSessionInUrl: true,
-        },
-      })
-    : null;
+/** @deprecated Use createClient from ./supabase/client.js in client components */
+export { createClient } from "./supabase/client";

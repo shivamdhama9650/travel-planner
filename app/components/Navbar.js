@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { clearStoredAuth, getStoredAuth, setStoredAuth, syncProfileWithBackend } from "../lib/auth";
-import { supabase } from "../lib/supabase";
+import { createClient } from "../lib/supabase/client";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -30,6 +30,7 @@ export default function Navbar() {
         return;
       }
 
+      const supabase = createClient();
       if (!supabase) {
         setUser(null);
         return;
@@ -61,6 +62,7 @@ export default function Navbar() {
   }, []);
 
   const handleLogout = async () => {
+    const supabase = createClient();
     if (supabase) {
       await supabase.auth.signOut();
     }
