@@ -1,19 +1,40 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { setStoredAuth, syncProfileWithBackend } from "../lib/auth";
+import { formatAuthError, signInWithGoogle } from "../lib/auth-oauth";
 import { supabase } from "../lib/supabase";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  useEffect(() => {
+    const paramError = searchParams.get("error");
+    if (paramError) {
+      setError(formatAuthError({ message: decodeURIComponent(paramError) }));
+    }
+  }, [searchParams]);
+
+  const handleGoogle = async () => {
+    setError("");
+    setGoogleLoading(true);
+    try {
+      await signInWithGoogle();
+    } catch (err) {
+      setError(formatAuthError(err));
+      setGoogleLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,55 +61,86 @@ export default function LoginPage() {
       });
       router.push("/");
     } catch (err) {
-      setError(err.message || "Unable to login right now");
+      setError(formatAuthError(err));
     } finally {
       setLoading(false);
     }
   };
 
   return (
+    <form className="auth-card" onSubmit={handleSubmit}>
+      <h1 className="auth-title">
+        Login to <span className="gradient-text">Travel Threads</span>
+      </h1>
+      <p className="auth-subtitle">Access your trips, budgets, and package preferences.</p>
+
+      <button
+        type="button"
+        className="btn btn-google"
+        style={{ width: "100%", justifyContent: "center" }}
+        onClick={handleGoogle}
+        disabled={googleLoading || loading}
+      >
+        {googleLoading ? "Redirecting to Google…" : "Continue with Google"}
+      </button>
+
+      <div className="auth-divider">
+        <span>or use email</span>
+      </div>
+
+      <p className="auth-hint">
+        Email login is limited on the free plan (~2 emails/hour). Google sign-in does not use email quota.
+      </p>
+
+      <div className="calc-field">
+        <label className="calc-label" htmlFor="login-email">Email</label>
+        <input
+          id="login-email"
+          type="email"
+          className="calc-input"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+      </div>
+
+      <div className="calc-field">
+        <label className="calc-label" htmlFor="login-password">Password</label>
+        <input
+          id="login-password"
+          type="password"
+          className="calc-input"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+      </div>
+
+      <button
+        type="submit"
+        className="btn btn-primary"
+        style={{ width: "100%", justifyContent: "center" }}
+        disabled={loading || googleLoading}
+      >
+        {loading ? "Signing in..." : "Login with email"}
+      </button>
+      {error ? <p className="auth-error">{error}</p> : null}
+
+      <p className="auth-switch">
+        New here? <Link href="/register">Create an account</Link>
+      </p>
+    </form>
+  );
+}
+
+export default function LoginPage() {
+  return (
     <>
       <Navbar />
       <main className="auth-page">
-        <form className="auth-card" onSubmit={handleSubmit}>
-          <h1 className="auth-title">
-            Login to <span className="gradient-text">Travel Threads</span>
-          </h1>
-          <p className="auth-subtitle">Access your trips, budgets, and package preferences.</p>
-
-          <div className="calc-field">
-            <label className="calc-label" htmlFor="login-email">Email</label>
-            <input
-              id="login-email"
-              type="email"
-              className="calc-input"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="calc-field">
-            <label className="calc-label" htmlFor="login-password">Password</label>
-            <input
-              id="login-password"
-              type="password"
-              className="calc-input"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-
-          <button type="submit" className="btn btn-primary" style={{ width: "100%", justifyContent: "center" }}>
-            {loading ? "Signing in..." : "Login"}
-          </button>
-          {error ? <p className="auth-error">{error}</p> : null}
-
-          <p className="auth-switch">
-            New here? <Link href="/register">Create an account</Link>
-          </p>
-        </form>
+        <Suspense fallback={<div className="auth-card">Loading…</div>}>
+          <LoginForm />
+        </Suspense>
       </main>
       <Footer />
     </>

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { setStoredAuth, syncProfileWithBackend } from "../lib/auth";
+import { formatAuthError, signInWithGoogle } from "../lib/auth-oauth";
 import { supabase } from "../lib/supabase";
 
 export default function RegisterPage() {
@@ -15,6 +16,18 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  const handleGoogle = async () => {
+    setError("");
+    setGoogleLoading(true);
+    try {
+      await signInWithGoogle();
+    } catch (err) {
+      setError(formatAuthError(err));
+      setGoogleLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,13 +46,16 @@ export default function RegisterPage() {
           data: {
             full_name: fullName,
           },
+          emailRedirectTo: typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined,
         },
       });
       if (signUpError) throw signUpError;
 
       const accessToken = data?.session?.access_token;
       if (!accessToken) {
-        throw new Error("Account created. Please verify your email and then login.");
+        throw new Error(
+          "Account created. Check your email to confirm, or use Continue with Google next time to avoid email limits."
+        );
       }
 
       const userProfile = await syncProfileWithBackend(accessToken);
@@ -49,7 +65,7 @@ export default function RegisterPage() {
       });
       router.push("/");
     } catch (err) {
-      setError(err.message || "Unable to register right now");
+      setError(formatAuthError(err));
     } finally {
       setLoading(false);
     }
@@ -64,6 +80,24 @@ export default function RegisterPage() {
             Create your <span className="gradient-text">Travel Threads</span> account
           </h1>
           <p className="auth-subtitle">Register once and plan all your trips from one place.</p>
+
+          <button
+            type="button"
+            className="btn btn-google"
+            style={{ width: "100%", justifyContent: "center" }}
+            onClick={handleGoogle}
+            disabled={googleLoading || loading}
+          >
+            {googleLoading ? "Redirecting to Google…" : "Continue with Google"}
+          </button>
+
+          <div className="auth-divider">
+            <span>or use email</span>
+          </div>
+
+          <p className="auth-hint">
+            Email sign-up sends confirmation mail (free Supabase: ~2/hour). Google is recommended.
+          </p>
 
           <div className="calc-field">
             <label className="calc-label" htmlFor="register-name">Full Name</label>
@@ -98,11 +132,17 @@ export default function RegisterPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              minLength={6}
             />
           </div>
 
-          <button type="submit" className="btn btn-primary" style={{ width: "100%", justifyContent: "center" }}>
-            {loading ? "Creating account..." : "Register"}
+          <button
+            type="submit"
+            className="btn btn-primary"
+            style={{ width: "100%", justifyContent: "center" }}
+            disabled={loading || googleLoading}
+          >
+            {loading ? "Creating account..." : "Register with email"}
           </button>
           {error ? <p className="auth-error">{error}</p> : null}
 
