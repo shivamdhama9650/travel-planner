@@ -235,7 +235,10 @@ const seedMongoFromJson = async () => {
     const price = Number(jsonPackagePrices[dest.id] ?? defaultPackagePrice(dest));
     await PackagePrice.updateOne(
       { destinationId: dest.id },
-      { $set: { destinationId: dest.id, packagePrice: price } },
+      {
+        $set: { destinationId: dest.id },
+        $setOnInsert: { packagePrice: price },
+      },
       { upsert: true }
     );
     upsertedCount += 1;
