@@ -4,21 +4,28 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import DestinationCard from "./components/DestinationCard";
 import TravelBot from "./components/TravelBot";
-
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+import localDestinations from "../backend/data/destinations.json";
+import localPackagePrices from "../backend/data/packages.json";
 
 async function getDestinations() {
-  try {
-    const res = await fetch(`${API}/api/destinations`, {
-      cache: "no-store",
-    });
-    if (!res.ok) throw new Error("API error");
-    const json = await res.json();
-    return json.data || [];
-  } catch {
-    // Fallback: use local data if API is down
-    return getFallbackDestinations();
-  }
+  return localDestinations.map((destination) => ({
+    id: destination.id,
+    name: destination.name,
+    tagline: destination.tagline,
+    region: destination.region,
+    heroImage: destination.heroImage,
+    rating: destination.rating,
+    bestTime: destination.bestTime,
+    duration: destination.duration,
+    highlights: (destination.highlights || []).slice(0, 3),
+    budgetPerDay:
+      (destination.expenses?.budget?.accommodation || 0) +
+      (destination.expenses?.budget?.food || 0) +
+      (destination.expenses?.budget?.transport || 0) +
+      (destination.expenses?.budget?.activities || 0) +
+      (destination.expenses?.budget?.misc || 0),
+    packagePrice: Number(localPackagePrices[destination.id] || 7500),
+  }));
 }
 
 function getFallbackDestinations() {

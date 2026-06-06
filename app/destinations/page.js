@@ -83,23 +83,30 @@ const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 const REGIONS = ["All", "North India", "West India", "Northeast India"];
 
 export default function DestinationsPage() {
-  const [destinations, setDestinations] = useState([]);
+  const [destinations, setDestinations] = useState(FALLBACK);
   const [region, setRegion] = useState("All");
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("rating");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function load() {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 6000);
+
       try {
-        const res = await fetch(`${API}/api/destinations`);
+        const res = await fetch(`${API}/api/destinations`, {
+          signal: controller.signal,
+        });
         if (!res.ok) throw new Error();
         const json = await res.json();
         setDestinations(json.data || FALLBACK);
       } catch {
         setDestinations(FALLBACK);
+      } finally {
+        clearTimeout(timeout);
+        setLoading(false);
       }
-      setLoading(false);
     }
     load();
   }, []);

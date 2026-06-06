@@ -6,16 +6,34 @@ import Image from "next/image";
 import RazorpayBookButton from "./RazorpayBookButton";
 import { getStoredAuth } from "../lib/auth";
 import { normalizeImageUrl } from "../lib/images";
+import localDestinations from "../../backend/data/destinations.json";
+import localPackagePrices from "../../backend/data/packages.json";
 
 const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
+const fallbackPackages = localDestinations.map((destination) => ({
+  id: destination.id,
+  name: destination.name,
+  region: destination.region,
+  duration: destination.duration,
+  packagePrice: Number(localPackagePrices[destination.id] || 7500),
+  heroImage: destination.heroImage,
+  tagline: destination.tagline,
+}));
+
+const getEditablePrices = (items) =>
+  items.reduce((acc, pkg) => {
+    acc[pkg.id] = String(pkg.packagePrice);
+    return acc;
+  }, {});
+
 export default function OurPackages() {
-  const [packages, setPackages] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [packages, setPackages] = useState(fallbackPackages);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [auth, setAuth] = useState({ token: "", user: null });
   const [savingId, setSavingId] = useState("");
-  const [editPrices, setEditPrices] = useState({});
+  const [editPrices, setEditPrices] = useState(() => getEditablePrices(fallbackPackages));
 
   const isAdmin = auth?.user?.role === "admin";
 
@@ -32,23 +50,27 @@ export default function OurPackages() {
 
   useEffect(() => {
     const loadPackages = async () => {
-      setLoading(true);
       setError("");
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 6000);
+
       try {
-        const res = await fetch(`${API}/api/packages`, { cache: "no-store" });
+        const res = await fetch(`${API}/api/packages`, {
+          cache: "no-store",
+          signal: controller.signal,
+        });
         const json = await res.json();
         if (!res.ok || !json.success) {
           throw new Error(json.message || "Failed to load packages");
         }
-        setPackages(json.data || []);
-        const nextPrices = {};
-        (json.data || []).forEach((pkg) => {
-          nextPrices[pkg.id] = String(pkg.packagePrice);
-        });
-        setEditPrices(nextPrices);
+        const nextPackages = json.data?.length ? json.data : fallbackPackages;
+        setPackages(nextPackages);
+        setEditPrices(getEditablePrices(nextPackages));
       } catch {
-        setError("Could not load packages right now.");
+        setPackages(fallbackPackages);
+        setEditPrices(getEditablePrices(fallbackPackages));
       } finally {
+        clearTimeout(timeout);
         setLoading(false);
       }
     };
